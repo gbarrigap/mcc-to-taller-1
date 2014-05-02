@@ -1,5 +1,7 @@
 package biblioteca.domain;
 
+import java.util.List;
+
 /**
  *
  * @author guillermo
@@ -11,6 +13,7 @@ public abstract class Material {
     private String titulo;
     private String editorial;
     private boolean prestado;
+    private List<Ejemplar> ejemplares;
 
     public Material(String titulo, String editorial) {
         this.titulo = titulo;
@@ -91,5 +94,23 @@ public abstract class Material {
      */
     public void setNumeroCopia(int numeroCopia) {
         this.numeroCopia = numeroCopia;
+    }
+
+    /**
+     * @return the ejemplares
+     */
+    public List<Ejemplar> getEjemplares() {
+        return ejemplares;
+    }
+
+    /**
+     * @param ejemplares the ejemplares to set
+     */
+    public void setEjemplares(List<Ejemplar> ejemplares) {
+        this.ejemplares = ejemplares;
+    }
+    
+    public void addEjemplar(Ejemplar ejemplar) {
+        this.ejemplares.add(ejemplar);
     }
 }

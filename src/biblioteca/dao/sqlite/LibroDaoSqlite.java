@@ -6,6 +6,7 @@
 package biblioteca.dao.sqlite;
 
 import biblioteca.dao.LibroDAO;
+import biblioteca.domain.Ejemplar;
 import biblioteca.domain.Libro;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -28,24 +29,41 @@ public class LibroDaoSqlite extends LibroDAO {
 
     @Override
     public Libro getLibroByIsbn(long isbn) {
-        Libro b = null;
-
+        Libro book = new Libro();
+        
         try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT titulo, autor, editorial FROM libros");
-
+            Statement statement = this.connection.createStatement();
+            
+            // Primero se cargan los datos del libro.
+            String query = String.format("SELECT titulo, autor, editorial FROM libros JOIN materiales USING (mid) WHERE isbn = %d", isbn);
+            ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
                 String titulo = rs.getString("titulo");
                 String autor = rs.getString("autor");
                 String editorial = rs.getString("editorial");
-
-                b = new Libro(isbn, titulo, autor, editorial);
+                
+                System.out.println(titulo + ", " + autor + ", " + editorial);
+                
+                book.setTitulo(titulo);
+                book.setAutor(autor);
+                book.setEditorial(editorial);
             }
+            
+            // Una vez cargado el libro,
+            // se cargan sus ejemplares.
+            book.setEjemplares(new ArrayList<Ejemplar>());
+            query = String.format("SELECT numero FROM libros JOIN ejemplares USING (mid) WHERE isbn = %d", isbn);
+            rs = statement.executeQuery(query);
+            while (rs.next()) {
+                int numero = Integer.parseInt(rs.getString("numero"));
+                book.addEjemplar(new Ejemplar(numero));
+            }
+            
         } catch (SQLException err) {
             System.err.println(err.toString());
         }
-
-        return b;
+        
+        return book;
     }
 
     @Override
@@ -62,7 +80,37 @@ public class LibroDaoSqlite extends LibroDAO {
 
     @Override
     public Libro retrieve(Libro book) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            Statement statement = this.connection.createStatement();
+            
+            // Primero se cargan los datos del libro.
+            String query = String.format("SELECT titulo, autor, editorial FROM libros JOIN materiales USING (mid) WHERE isbn = %d", book.getIsbn());
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                String titulo = rs.getString("titulo");
+                String autor = rs.getString("autor");
+                String editorial = rs.getString("editorial");
+                
+                book.setTitulo(titulo);
+                book.setAutor(autor);
+                book.setEditorial(editorial);
+            }
+            
+            // Una vez cargado el libro,
+            // se cargan sus ejemplares.
+            book.setEjemplares(new ArrayList<Ejemplar>());
+            query = String.format("SELECT numero FROM libros JOIN ejemplares USING (mid) WHERE isbn = %d", book.getIsbn());
+            rs = statement.executeQuery(query);
+            while (rs.next()) {
+                int numero = Integer.parseInt(rs.getString("numero"));
+                book.addEjemplar(new Ejemplar(numero));
+            }
+            
+        } catch (SQLException err) {
+            System.err.println(err.toString());
+        }
+        
+        return book;
     }
 
     @Override
@@ -78,22 +126,20 @@ public class LibroDaoSqlite extends LibroDAO {
     @Override
     public List<Libro> retrieveAll() {
         List<Libro> books = new ArrayList<>();
-        
+
         try {
+            String query = "SELECT isbn FROM libros";
             Statement statement = this.connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT isbn, titulo, autor, editorial FROM libros");
+            ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
                 long isbn = Long.parseLong(rs.getString("isbn"));
-                String titulo = rs.getString("titulo");
-                String autor = rs.getString("autor");
-                String editorial = rs.getString("editorial");
-                Libro book = new Libro(isbn, titulo, autor, editorial);
+                Libro book = getLibroByIsbn(isbn);
                 books.add(book);
             }
         } catch (SQLException err) {
             System.err.println(err.toString());
         }
-        
+
         return books;
     }
 
