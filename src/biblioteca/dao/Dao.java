@@ -15,6 +15,8 @@ public interface Dao<T> {
 
     public void create(T t);
 
+    public T retrieve(int id);
+    
     public T retrieve(T t);
 
     public T update();

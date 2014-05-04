@@ -5,10 +5,14 @@
  */
 package biblioteca.ui.cli;
 
+import biblioteca.dao.CdDao;
 import biblioteca.dao.DaoFactory;
 import biblioteca.dao.LibroDAO;
+import biblioteca.domain.CD;
 import biblioteca.domain.Libro;
-import java.io.DataInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 
 /**
@@ -17,21 +21,47 @@ import java.util.List;
  */
 public class BibliotecaCli {
 
-    private static DataInputStream in = new DataInputStream(System.in);
-    
-    private static void agregarLibro() {
-        boolean error = false;
+    //private static DataInputStream in = new DataInputStream(System.in);
+    private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-        int isbn = 0;
-        String titulo = null;
-        String autor = null;
-        String editorial = null;
+    private static void agregarCD() {
+        boolean error = false;
+        CD cd = new CD();
+
+        do {
+            error = false;
+            System.out.print("Título: ");
+            try {
+                cd.setTitulo(in.readLine());
+            } catch (IOException err) {
+                error = true;
+                System.err.println(err.toString());
+            }
+        } while (error);
+
+        do {
+            error = false;
+            System.out.print("Editorial: ");
+            try {
+                cd.setEditorial(in.readLine());
+            } catch (IOException err) {
+                error = true;
+                System.err.println(err.toString());
+            }
+        } while (error);
+
+        cd.persist();
+    }
+
+    private static void agregarLibro() {
+        boolean error;
+        Libro book = new Libro();
 
         do {
             error = false;
             System.out.print("ISBN: ");
             try {
-                isbn = Integer.parseInt(in.readLine());
+                book.setIsbn(Integer.parseInt(in.readLine()));
             } catch (Exception err) {
                 error = true;
                 System.err.println(err.toString());
@@ -42,7 +72,7 @@ public class BibliotecaCli {
             error = false;
             System.out.print("Título: ");
             try {
-                titulo = in.readLine();
+                book.setTitulo(in.readLine());
             } catch (Exception err) {
                 error = true;
                 System.err.println(err.toString());
@@ -53,7 +83,7 @@ public class BibliotecaCli {
             error = false;
             System.out.print("Autor: ");
             try {
-                autor = in.readLine();
+                book.setAutor(in.readLine());
             } catch (Exception err) {
                 error = true;
                 System.err.println(err.toString());
@@ -64,26 +94,35 @@ public class BibliotecaCli {
             error = false;
             System.out.print("Editorial: ");
             try {
-                editorial = in.readLine();
+                book.setEditorial(in.readLine());
             } catch (Exception err) {
                 error = true;
                 System.err.println(err.toString());
             }
         } while (error);
 
-        Libro book = new Libro(isbn, titulo, autor, editorial);
-        LibroDAO dao = DaoFactory.createLibroDao();
-        dao.create(book);
+        do {
+            error = false;
+            System.out.print("Agregar CD? (s/n): ");
+            try {
+                if ("s".equals(in.readLine().toLowerCase())) {
+                    System.out.print("CD ID: ");
+                    
+                    CdDao dao = DaoFactory.getCdDao();
+                    book.setCd(dao.retrieve(Integer.parseInt(in.readLine())));
+                }
+            } catch (IOException err) {
+                System.err.println(err.toString());
+            }
+        } while (error);
+
+        book.persist();
     }
-    
+
     private static void agregarRevista() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    private static void agregarCD() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
+
     private static void showMenuMaterialesAdministrarAgregar() {
         boolean volver = false;
         int opt = 0;
@@ -115,11 +154,11 @@ public class BibliotecaCli {
                 case 1: // Libro
                     agregarLibro();
                     break;
-                    
+
                 case 2: // Revista
                     agregarRevista();
                     break;
-                    
+
                 case 3: // CD
                     agregarCD();
                     break;
@@ -131,19 +170,19 @@ public class BibliotecaCli {
 
         } while (!volver);
     }
-    
+
     private static void editarLibro() {
         throw new UnsupportedOperationException("Not supported yet!");
     }
-    
+
     private static void editarRevista() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void editarCD() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void showMenuMaterialesAdministrarEditar() {
         boolean volver = false;
         int opt = 0;
@@ -175,11 +214,11 @@ public class BibliotecaCli {
                 case 1: // Libro
                     editarLibro();
                     break;
-                    
+
                 case 2: // Revista
                     editarRevista();
                     break;
-                    
+
                 case 3: // CD
                     editarCD();
                     break;
@@ -191,19 +230,19 @@ public class BibliotecaCli {
 
         } while (!volver);
     }
-    
+
     private static void eliminarLibro() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void eliminarRevista() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void eliminarCD() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void showMenuMaterialesAdministrarEliminar() {
         boolean volver = false;
         int opt = 0;
@@ -235,11 +274,11 @@ public class BibliotecaCli {
                 case 1: // Libro
                     eliminarLibro();
                     break;
-                    
+
                 case 2: // Revista
                     eliminarRevista();
                     break;
-                    
+
                 case 3: // CD
                     eliminarCD();
                     break;
@@ -251,7 +290,7 @@ public class BibliotecaCli {
 
         } while (!volver);
     }
-    
+
     private static void showMenuMaterialesAdministrar() {
         boolean volver = false;
         int opt = 0;
@@ -283,11 +322,11 @@ public class BibliotecaCli {
                 case 1: // Agregar
                     showMenuMaterialesAdministrarAgregar();
                     break;
-                    
+
                 case 2: // Editar
                     showMenuMaterialesAdministrarEditar();
                     break;
-                    
+
                 case 3: // Eliminar
                     showMenuMaterialesAdministrarEliminar();
                     break;
@@ -299,11 +338,11 @@ public class BibliotecaCli {
 
         } while (!volver);
     }
-    
+
     private static void listarLibros() {
-        LibroDAO dao = DaoFactory.createLibroDao();
+        LibroDAO dao = DaoFactory.getLibroDao();
         List<Libro> books = dao.retrieveAll();
-        
+
         System.out.println("**** LIBROS *****");
         for (Libro book : books) {
             System.out.println("--");
@@ -315,15 +354,15 @@ public class BibliotecaCli {
         }
         System.out.println("--");
     }
-    
+
     private static void listarLibrosDisponibles() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void listarLibrosNoDisponibles() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void showMenuMaterialesConsultasListarLibros() {
         boolean volver = false;
         int opt = 0;
@@ -355,11 +394,11 @@ public class BibliotecaCli {
                 case 1: // Libros
                     listarLibros();
                     break;
-                    
+
                 case 2: // Revistas
                     listarLibrosDisponibles();
                     break;
-                    
+
                 case 3: // CDs
                     listarLibrosNoDisponibles();
                     break;
@@ -371,19 +410,19 @@ public class BibliotecaCli {
 
         } while (!volver);
     }
-    
+
     private static void listarRevistas() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void listarRevistasDisponibles() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void listarRevistasNoDisponibles() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void showMenuMaterialesConsultasListarRevistas() {
         boolean volver = false;
         int opt = 0;
@@ -415,11 +454,11 @@ public class BibliotecaCli {
                 case 1: // Todas
                     listarRevistas();
                     break;
-                    
+
                 case 2: // Disponibles
                     listarRevistasDisponibles();
                     break;
-                    
+
                 case 3: // No disponibles
                     listarRevistasNoDisponibles();
                     break;
@@ -431,19 +470,19 @@ public class BibliotecaCli {
 
         } while (!volver);
     }
-    
+
     private static void listarCDs() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void listarCDsDisponibles() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void listarCDsNoDisponibles() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void showMenuMaterialesConsultasListarCDs() {
         boolean volver = false;
         int opt = 0;
@@ -475,11 +514,11 @@ public class BibliotecaCli {
                 case 1: // Todos
                     listarCDs();
                     break;
-                    
+
                 case 2: // Disponibles
                     listarCDsDisponibles();
                     break;
-                    
+
                 case 3: // No disponibles
                     listarCDsNoDisponibles();
                     break;
@@ -491,7 +530,7 @@ public class BibliotecaCli {
 
         } while (!volver);
     }
-    
+
     private static void showMenuMaterialesConsultasListar() {
         boolean volver = false;
         int opt = 0;
@@ -523,11 +562,11 @@ public class BibliotecaCli {
                 case 1: // Libros
                     showMenuMaterialesConsultasListarLibros();
                     break;
-                    
+
                 case 2: // Revistas
                     showMenuMaterialesConsultasListarRevistas();
                     break;
-                    
+
                 case 3: // CDs
                     showMenuMaterialesConsultasListarCDs();
                     break;
@@ -539,23 +578,23 @@ public class BibliotecaCli {
 
         } while (!volver);
     }
-    
+
     private static void contarLibros() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void contarRevistas() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void contarCDs() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void contarMateriales() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void showMenuMaterialesConsultasContar() {
         boolean volver = false;
         int opt = 0;
@@ -588,15 +627,15 @@ public class BibliotecaCli {
                 case 1: // Libros
                     contarLibros();
                     break;
-                    
+
                 case 2: // Revistas
                     contarRevistas();
                     break;
-                    
+
                 case 3: // CDs
                     contarCDs();
                     break;
-                    
+
                 case 4: // Todos
                     contarMateriales();
                     break;
@@ -608,23 +647,23 @@ public class BibliotecaCli {
 
         } while (!volver);
     }
-    
+
     private static void buscarLibros() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void buscarRevistas() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void buscarCDs() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void buscarMateriales() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void showMenuMaterialesConsultasBuscar() {
         boolean volver = false;
         int opt = 0;
@@ -657,15 +696,15 @@ public class BibliotecaCli {
                 case 1: // Libros
                     buscarLibros();
                     break;
-                    
+
                 case 2: // Revistas
                     buscarRevistas();
                     break;
-                    
+
                 case 3: // CDs
                     buscarCDs();
                     break;
-                    
+
                 case 4: // Todos
                     buscarMateriales();
                     break;
@@ -677,7 +716,7 @@ public class BibliotecaCli {
 
         } while (!volver);
     }
-    
+
     private static void showMenuMaterialesConsultas() {
         boolean volver = false;
         int opt = 0;
@@ -709,11 +748,11 @@ public class BibliotecaCli {
                 case 1: // Listar
                     showMenuMaterialesConsultasListar();
                     break;
-                    
+
                 case 2: // Contar
                     showMenuMaterialesConsultasContar();
                     break;
-                    
+
                 case 3: // Buscar
                     showMenuMaterialesConsultasBuscar();
                     break;
@@ -756,7 +795,7 @@ public class BibliotecaCli {
                 case 1: // Administrar
                     showMenuMaterialesAdministrar();
                     break;
-                    
+
                 case 2: // Consultas
                     showMenuMaterialesConsultas();
                     break;
@@ -768,19 +807,19 @@ public class BibliotecaCli {
 
         } while (!volver);
     }
-    
+
     private static void agregarUsuario() {
         throw new UnsupportedOperationException("Not supported yet!");
     }
-    
+
     private static void editarUsuario() {
         throw new UnsupportedOperationException("Not supported yet!");
     }
-    
+
     private static void eliminarUsuario() {
         throw new UnsupportedOperationException("Not supported yet!");
     }
-    
+
     private static void showMenuUsuariosAdministrar() {
         boolean volver = false;
         int opt = 0;
@@ -812,11 +851,11 @@ public class BibliotecaCli {
                 case 1: // Agregar
                     agregarUsuario();
                     break;
-                    
+
                 case 2: // Editar
                     editarUsuario();
                     break;
-                    
+
                 case 3: // Eliminar
                     eliminarUsuario();
                     break;
@@ -828,11 +867,11 @@ public class BibliotecaCli {
 
         } while (!volver);
     }
-    
+
     private static void showMenuUsuariosConsultas() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void showMenuUsuarios() {
         boolean volver = false;
         int opt = 0;
@@ -862,7 +901,7 @@ public class BibliotecaCli {
 
                 case 1: // Administrar
                     break;
-                    
+
                 case 2: // Consultas
                     break;
 
@@ -873,15 +912,15 @@ public class BibliotecaCli {
 
         } while (!volver);
     }
-    
+
     private static void prestarMateriales() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void showMenuPrestamosConsultas() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     private static void showMenuPrestamos() {
         boolean volver = false;
         int opt = 0;
@@ -912,7 +951,7 @@ public class BibliotecaCli {
                 case 1: // Prestar materiales
                     prestarMateriales();
                     break;
-                    
+
                 case 2: // Consultas
                     showMenuPrestamosConsultas();
                     break;

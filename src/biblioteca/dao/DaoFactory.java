@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package biblioteca.dao;
 
+import biblioteca.dao.sqlite.CdDaoSqlite;
 import biblioteca.dao.sqlite.LibroDaoSqlite;
-import biblioteca.domain.Libro;
 import java.sql.*;
 
 /**
@@ -15,26 +14,32 @@ import java.sql.*;
  * @author guillermo
  */
 public class DaoFactory {
-    
-    //public static 
-    
-    public static LibroDAO createLibroDao() {
-        
+
+    private static Connection getConnectionDao() {
+        Connection connection = null;
+
         try {
             Class.forName("org.sqlite.JDBC");
-        } catch (Exception err) {
+        } catch (ClassNotFoundException err) {
             System.out.println(err.toString());
         }
-
-        Connection connection = null;
 
         try {
             // create a database connection
             connection = DriverManager.getConnection("jdbc:sqlite:biblioteca.db");
-        } catch (Exception err) {
+        } catch (SQLException err) {
             System.err.println(err.toString());
         }
         
-        return new LibroDaoSqlite(connection);
+        return connection;
     }
+
+    public static LibroDAO getLibroDao() {
+        return new LibroDaoSqlite(DaoFactory.getConnectionDao());
+    }
+    
+    public static CdDao getCdDao() {
+        return new CdDaoSqlite(DaoFactory.getConnectionDao());
+    }
+    
 }

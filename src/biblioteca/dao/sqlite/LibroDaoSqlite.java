@@ -68,10 +68,52 @@ public class LibroDaoSqlite extends LibroDAO {
 
     @Override
     public void create(Libro b) {
+        String bookMid = null;
+        String cdMid = null;
+        String cdCid = null;
+        
         try {
-            String insertCmd = "INSERT INTO libros (isbn, titulo, autor, editorial) VALUES (%d, '%s', '%s', '%s')";
-            insertCmd = String.format(insertCmd, b.getIsbn(), b.getTitulo(), b.getAutor(), b.getEditorial());
             Statement statement = this.connection.createStatement();
+            
+            // Insert material.
+            String insertCmd = String.format("INSERT INTO materiales (titulo, editorial) VALUES ('%s', '%s')", b.getTitulo(), b.getEditorial());
+            statement.executeUpdate(insertCmd);
+            
+            // Obtiene el identificador del material insertado.
+            String getLastKeyQuery = "SELECT max(mid) AS mid FROM materiales";
+            ResultSet rs = statement.executeQuery(getLastKeyQuery);
+            while (rs.next()) {
+                bookMid = rs.getString("mid");
+            }
+            
+            // Insert CD?
+            if (b.hasCd()) {
+                insertCmd = String.format("INSERT INTO materiales (titulo, editorial) VALUES ('%s', '%s')", b.getCd().getTitulo(), b.getCd().getEditorial());
+                statement.executeUpdate(insertCmd);
+                
+                // Obtiene el identificador del material insertado.
+                getLastKeyQuery = "SELECT max(mid) FROM materiales";
+                rs = statement.executeQuery(getLastKeyQuery);
+                while (rs.next()) {
+                    //cdMid = rs.getString("mid");
+                    cdMid = Integer.toString(rs.getInt(1));
+                }
+                
+                insertCmd = String.format("INSERT INTO cds (mid) VALUES (%s)", cdMid);
+                statement.executeUpdate(insertCmd);
+                
+                // Obtiene el identificador del CD insertado.
+                getLastKeyQuery = "SELECT max(cid) FROM cds";
+                rs = statement.executeQuery(getLastKeyQuery);
+                while (rs.next()) {
+                    //cdCid = rs.getString("cid");
+                    cdCid = Integer.toString(rs.getInt(1));
+                }
+            }
+            
+            // Insert libro.
+            String cid = b.hasCd() ? cdMid : "NULL";
+            insertCmd = String.format("INSERT INTO libros (mid, cid, isbn, autor) VALUES (%s, %s, %d, '%s')", bookMid, cdCid, b.getIsbn(), b.getAutor());
             statement.executeUpdate(insertCmd);
         } catch (SQLException err) {
             System.err.println(err.toString());
@@ -100,6 +142,39 @@ public class LibroDaoSqlite extends LibroDAO {
             // se cargan sus ejemplares.
             book.setEjemplares(new ArrayList<Ejemplar>());
             query = String.format("SELECT numero FROM libros JOIN ejemplares USING (mid) WHERE isbn = %d", book.getIsbn());
+            rs = statement.executeQuery(query);
+            while (rs.next()) {
+                int numero = Integer.parseInt(rs.getString("numero"));
+                book.addEjemplar(new Ejemplar(numero));
+            }
+            
+        } catch (SQLException err) {
+            System.err.println(err.toString());
+        }
+        
+        return book;
+    }
+    
+    @Override
+    public Libro retrieve(int lid) {
+        Libro book = new Libro();
+        
+        try {
+            Statement statement = this.connection.createStatement();
+            
+            // Primero se cargan los datos del libro.
+            String query = String.format("SELECT titulo, autor, editorial, isbn FROM libros JOIN materiales USING (mid) WHERE lid = %d", lid);
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                book.setTitulo(rs.getString("titulo"));
+                book.setAutor(rs.getString("autor"));
+                book.setEditorial(rs.getString("editorial"));
+            }
+            
+            // Una vez cargado el libro,
+            // se cargan sus ejemplares.
+            book.setEjemplares(new ArrayList<Ejemplar>());
+            query = String.format("SELECT numero FROM libros JOIN ejemplares USING (mid) WHERE lid = %d", lid);
             rs = statement.executeQuery(query);
             while (rs.next()) {
                 int numero = Integer.parseInt(rs.getString("numero"));

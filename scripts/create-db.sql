@@ -13,25 +13,33 @@ CREATE TABLE materiales (
     editorial       TEXT
 );
 
+CREATE TABLE cds (
+    cid             INTEGER PRIMARY KEY AUTOINCREMENT,
+    mid             INTEGER REFERENCES material(mid)
+);
+
 CREATE TABLE libros (
-    mid             INTEGER REFERENCES material(mid),
+    lid             INTEGER PRIMARY KEY AUTOINCREMENT,
+    mid             INTEGER REFERENCES materiales(mid),
+    cid             INTEGER REFERENCES cds(cid),
     isbn            INTEGER,
     autor           TEXT NOT NULL
 );
 
-CREATE TABLE cds (
-    mid             INTEGER REFERENCES material(mid)
-);
-
 CREATE TABLE revistas (
-    mid             INTEGER REFERENCES material(mid),
-    periodicidad    INTEGER NOT NULL
+    rid             INTEGER PRIMARY KEY AUTOINCREMENT,
+    mid             INTEGER REFERENCES materiales(mid),
+    cid             INTEGER REFERENCES cds(cid),
+    periodicidad    TEXT NOT NULL CHECK (periodicidad IN ('Quincenal', 'Mensual', 'Trimestral'))
+    
 );
 
 CREATE TABLE ejemplares (
     eid             INTEGER PRIMARY KEY AUTOINCREMENT,
-    mid             INTEGER REFERENCES material(mid),
-    numero          INTEGER NOT NULL
+    mid             INTEGER REFERENCES materiales(mid),
+    numero          INTEGER NOT NULL,
+    
+    UNIQUE (mid, numero)
 );
 
 CREATE TABLE usuarios (
@@ -43,10 +51,12 @@ CREATE TABLE usuarios (
 CREATE TABLE prestamos (
     pid             INTEGER PRIMARY KEY AUTOINCREMENT,
     uid             INTEGER REFERENCES usuarios(uid),
-    vigente         INTEGER NOT NULL -- 0 = FALSE; 1 = TRUE.
+    vigente         INTEGER NOT NULL CHECK (vigente IN (0, 1)) -- 0 = FALSE; 1 = TRUE.
 );
 
 CREATE TABLE materiales_prestamos (
     pid             INTEGER REFERENCES prestamos(pid),
-    eid             INTEGER REFERENCES ejemplares(eid)
+    eid             INTEGER REFERENCES ejemplares(eid),
+
+    PRIMARY KEY (pid, eid)
 );
