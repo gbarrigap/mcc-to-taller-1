@@ -54,12 +54,12 @@ public class PrestamoDaoSqlite extends PrestamoDao {
     }
 
     @Override
-    public Prestamo update() {
+    public Prestamo update(Prestamo p) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void delete() {
+    public void delete(Prestamo p) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

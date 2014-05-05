@@ -11,7 +11,7 @@ import biblioteca.domain.Libro;
  *
  * @author guillermo
  */
-public abstract class LibroDAO implements Dao<Libro> {
+public abstract class LibroDao implements Dao<Libro> {
 
-    public abstract Libro getLibroByIsbn(long isbn);
+    public abstract Libro getLibroByIsbn(String isbn);
 }

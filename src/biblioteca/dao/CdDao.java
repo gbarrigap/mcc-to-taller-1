@@ -6,12 +6,12 @@
 
 package biblioteca.dao;
 
-import biblioteca.domain.CD;
+import biblioteca.domain.Cd;
 
 /**
  *
  * @author guillermo
  */
-public abstract class CdDao implements Dao<CD> {
+public abstract class CdDao implements Dao<Cd> {
     
 }

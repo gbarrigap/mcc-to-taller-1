@@ -7,7 +7,7 @@
 package biblioteca.dao.sqlite;
 
 import biblioteca.dao.CdDao;
-import biblioteca.domain.CD;
+import biblioteca.domain.Cd;
 import biblioteca.domain.Ejemplar;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -29,7 +29,7 @@ public class CdDaoSqlite extends CdDao {
     }
     
     @Override
-    public void create(CD cd) {
+    public void create(Cd cd) {
         String mid = null;
         
         try {
@@ -55,8 +55,8 @@ public class CdDaoSqlite extends CdDao {
     }
 
     @Override
-    public CD retrieve(int cid) {
-        CD cd = new CD();
+    public Cd retrieve(int cid) {
+        Cd cd = new Cd();
         
         try {
             Statement statement = this.connection.createStatement();
@@ -87,22 +87,22 @@ public class CdDaoSqlite extends CdDao {
     }
 
     @Override
-    public CD retrieve(CD t) {
+    public Cd retrieve(Cd t) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public CD update() {
+    public Cd update(Cd cd) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void delete() {
+    public void delete(Cd cd) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<CD> retrieveAll() {
+    public List<Cd> retrieveAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

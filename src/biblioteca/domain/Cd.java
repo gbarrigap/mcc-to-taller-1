@@ -12,13 +12,29 @@ import biblioteca.dao.DaoFactory;
  *
  * @author guillermo
  */
-public class CD extends Material {
+public class Cd extends Material {
 
-    public CD(String titulo, String editorial) {
+    private int cid;
+
+    public Cd(String titulo, String editorial) {
         super(titulo, editorial);
     }
 
-    public CD() {
+    public Cd() {
+    }
+
+    /**
+     * @return the cid
+     */
+    public int getCid() {
+        return cid;
+    }
+
+    /**
+     * @param cid the cid to set
+     */
+    public void setCid(int cid) {
+        this.cid = cid;
     }
 
     public void persist() {

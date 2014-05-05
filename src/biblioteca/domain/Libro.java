@@ -6,7 +6,7 @@
 package biblioteca.domain;
 
 import biblioteca.dao.DaoFactory;
-import biblioteca.dao.LibroDAO;
+import biblioteca.dao.LibroDao;
 
 /**
  *
@@ -14,11 +14,12 @@ import biblioteca.dao.LibroDAO;
  */
 public class Libro extends Material {
 
-    private long isbn;
+    private int lid;
+    private String isbn;
     private String autor;
-    private CD cd;
+    private Cd cd;
 
-    public Libro(long isbn, String titulo, String autor, String editorial) {
+    public Libro(String isbn, String titulo, String autor, String editorial) {
         super(titulo, editorial);
 
         this.isbn = isbn;
@@ -29,7 +30,7 @@ public class Libro extends Material {
      *
      * @param isbn
      */
-    public Libro(long isbn) {
+    public Libro(String isbn) {
         this.isbn = isbn;
     }
 
@@ -53,28 +54,28 @@ public class Libro extends Material {
     /**
      * @return the isbn
      */
-    public long getIsbn() {
+    public String getIsbn() {
         return isbn;
     }
 
     /**
      * @param isbn the isbn to set
      */
-    public void setIsbn(long isbn) {
+    public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 
     /**
      * @return the cd
      */
-    public CD getCd() {
+    public Cd getCd() {
         return cd;
     }
 
     /**
      * @param cd the cd to set
      */
-    public void setCd(CD cd) {
+    public void setCd(Cd cd) {
         this.cd = cd;
     }
 
@@ -83,8 +84,13 @@ public class Libro extends Material {
     }
 
     public void persist() {
-        LibroDAO dao = DaoFactory.getLibroDao();
+        LibroDao dao = DaoFactory.getLibroDao();
         dao.create(this);
+    }
+    
+    public void delete() {
+        LibroDao dao = DaoFactory.getLibroDao();
+        dao.delete(this);
     }
     
     public void load() {
@@ -97,6 +103,20 @@ public class Libro extends Material {
         this.setCd(b.getCd());
         this.setEjemplares(b.getEjemplares());
         this.setIsbn(b.getIsbn());
+    }
+
+    /**
+     * @return the lid
+     */
+    public int getLid() {
+        return lid;
+    }
+
+    /**
+     * @param lid the lid to set
+     */
+    public void setLid(int lid) {
+        this.lid = lid;
     }
 
 }

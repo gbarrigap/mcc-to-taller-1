@@ -19,9 +19,9 @@ public interface Dao<T> {
     
     public T retrieve(T t);
 
-    public T update();
+    public T update(T t);
 
-    public void delete();
+    public void delete(T t);
 
     public List<T> retrieveAll();
 

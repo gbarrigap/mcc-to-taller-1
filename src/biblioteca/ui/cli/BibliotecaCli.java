@@ -7,8 +7,8 @@ package biblioteca.ui.cli;
 
 import biblioteca.dao.CdDao;
 import biblioteca.dao.DaoFactory;
-import biblioteca.dao.LibroDAO;
-import biblioteca.domain.CD;
+import biblioteca.dao.LibroDao;
+import biblioteca.domain.Cd;
 import biblioteca.domain.Libro;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class BibliotecaCli {
 
     private static void agregarCD() {
         boolean error = false;
-        CD cd = new CD();
+        Cd cd = new Cd();
 
         do {
             error = false;
@@ -61,7 +61,8 @@ public class BibliotecaCli {
             error = false;
             System.out.print("ISBN: ");
             try {
-                book.setIsbn(Integer.parseInt(in.readLine()));
+                //book.setIsbn(Integer.parseInt(in.readLine()));
+                book.setIsbn(in.readLine());
             } catch (Exception err) {
                 error = true;
                 System.err.println(err.toString());
@@ -340,7 +341,7 @@ public class BibliotecaCli {
     }
 
     private static void listarLibros() {
-        LibroDAO dao = DaoFactory.getLibroDao();
+        LibroDao dao = DaoFactory.getLibroDao();
         List<Libro> books = dao.retrieveAll();
 
         System.out.println("**** LIBROS *****");

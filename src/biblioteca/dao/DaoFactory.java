@@ -34,7 +34,7 @@ public class DaoFactory {
         return connection;
     }
 
-    public static LibroDAO getLibroDao() {
+    public static LibroDao getLibroDao() {
         return new LibroDaoSqlite(DaoFactory.getConnectionDao());
     }
     

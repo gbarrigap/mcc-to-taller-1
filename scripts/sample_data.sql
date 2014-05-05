@@ -1,5 +1,6 @@
 -- Set foreign keys on the Sqlite DB.
 -- PRAGMA foreign_keys = ON;
+PRAGMA foreign_keys = OFF;
 
 -- 
 DELETE FROM materiales_prestamos;
@@ -55,7 +56,7 @@ INSERT INTO ejemplares(mid, numero) VALUES ((SELECT max(mid) FROM materiales), 7
 
 -- LIBROS
 INSERT INTO materiales(titulo, editorial) VALUES ('Writing Effective Use Cases', 'Addyson-Wesley');
-INSERT INTO libros(mid, isbn, autor) VALUES ((SELECT max(mid) FROM materiales), '9780201702255', 'Alistair Cockburn');
+INSERT INTO libros(mid, isbn, autor) VALUES ((SELECT max(mid) FROM materiales), '978-0-201-70225-5', 'Alistair Cockburn');
 INSERT INTO ejemplares(mid, numero) VALUES ((SELECT max(mid) FROM materiales), 1);
 INSERT INTO ejemplares(mid, numero) VALUES ((SELECT max(mid) FROM materiales), 2);
 INSERT INTO ejemplares(mid, numero) VALUES ((SELECT max(mid) FROM materiales), 3);
@@ -63,7 +64,7 @@ INSERT INTO ejemplares(mid, numero) VALUES ((SELECT max(mid) FROM materiales), 4
 INSERT INTO ejemplares(mid, numero) VALUES ((SELECT max(mid) FROM materiales), 5);
 
 INSERT INTO materiales(titulo, editorial) VALUES ('Physics of the Impossible', 'Anchor Books');
-INSERT INTO libros(mid, isbn, autor, cid) VALUES ((SELECT max(mid) FROM materiales), '9780307278821', 'Michio Kaku', (SELECT cid FROM cds JOIN materiales USING (mid) WHERE titulo = 'CD1'));
+INSERT INTO libros(mid, isbn, autor, cid) VALUES ((SELECT max(mid) FROM materiales), '978-0-307-27882-1', 'Michio Kaku', (SELECT cid FROM cds JOIN materiales USING (mid) WHERE titulo = 'CD1'));
 INSERT INTO ejemplares(mid, numero) VALUES ((SELECT max(mid) FROM materiales), 1);
 INSERT INTO ejemplares(mid, numero) VALUES ((SELECT max(mid) FROM materiales), 2);
 INSERT INTO ejemplares(mid, numero) VALUES ((SELECT max(mid) FROM materiales), 3);
