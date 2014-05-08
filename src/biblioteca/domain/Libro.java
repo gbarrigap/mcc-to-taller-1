@@ -7,6 +7,7 @@ package biblioteca.domain;
 
 import biblioteca.dao.DaoFactory;
 import biblioteca.dao.LibroDao;
+import java.util.List;
 
 /**
  *
@@ -14,10 +15,13 @@ import biblioteca.dao.LibroDao;
  */
 public class Libro extends Material {
 
-    private int lid;
+    private Integer lid;
     private String isbn;
     private String autor;
     private Cd cd;
+
+    public Libro() {
+    }
 
     public Libro(String isbn, String titulo, String autor, String editorial) {
         super(titulo, editorial);
@@ -26,29 +30,42 @@ public class Libro extends Material {
         this.autor = autor;
     }
 
-    /**
-     *
-     * @param isbn
-     */
-    public Libro(String isbn) {
+    public Libro(String isbn, String titulo, String autor, String editorial, List<Ejemplar> ejemplares) {
+        super(titulo, editorial, ejemplares);
+
         this.isbn = isbn;
-    }
-
-    public Libro() {
-    }
-
-    /**
-     * @return the autor
-     */
-    public String getAutor() {
-        return autor;
-    }
-
-    /**
-     * @param autor the autor to set
-     */
-    public void setAutor(String autor) {
         this.autor = autor;
+    }
+
+    public Libro(String isbn, String titulo, String autor, String editorial, List<Ejemplar> ejemplares, Cd cd) {
+        super(titulo, editorial, ejemplares);
+
+        this.isbn = isbn;
+        this.autor = autor;
+        this.cd = cd;
+    }
+
+    public Libro(Integer lid, String isbn, String titulo, String autor, String editorial, List<Ejemplar> ejemplares, Cd cd) {
+        super(titulo, editorial, ejemplares);
+
+        this.lid = lid;
+        this.isbn = isbn;
+        this.autor = autor;
+        this.cd = cd;
+    }
+
+    /**
+     * @return the lid
+     */
+    public Integer getLid() {
+        return lid;
+    }
+
+    /**
+     * @param lid the lid to set
+     */
+    public void setLid(Integer lid) {
+        this.lid = lid;
     }
 
     /**
@@ -63,6 +80,20 @@ public class Libro extends Material {
      */
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    /**
+     * @return the autor
+     */
+    public String getAutor() {
+        return autor;
+    }
+
+    /**
+     * @param autor the autor to set
+     */
+    public void setAutor(String autor) {
+        this.autor = autor;
     }
 
     /**
@@ -83,19 +114,22 @@ public class Libro extends Material {
         return this.cd != null;
     }
 
+    @Override
     public void persist() {
         LibroDao dao = DaoFactory.getLibroDao();
         dao.create(this);
     }
-    
+
+    @Override
     public void delete() {
         LibroDao dao = DaoFactory.getLibroDao();
         dao.delete(this);
     }
-    
+
+    @Override
     public void load() {
         Libro b = DaoFactory.getLibroDao().retrieve(this);
-        
+
         this.setTitulo(b.getTitulo());
         this.setEditorial(b.getEditorial());
         this.setAutor(b.getAutor());
@@ -103,20 +137,6 @@ public class Libro extends Material {
         this.setCd(b.getCd());
         this.setEjemplares(b.getEjemplares());
         this.setIsbn(b.getIsbn());
-    }
-
-    /**
-     * @return the lid
-     */
-    public int getLid() {
-        return lid;
-    }
-
-    /**
-     * @param lid the lid to set
-     */
-    public void setLid(int lid) {
-        this.lid = lid;
     }
 
 }

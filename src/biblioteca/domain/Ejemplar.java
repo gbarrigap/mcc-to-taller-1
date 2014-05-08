@@ -11,6 +11,7 @@ package biblioteca.domain;
  */
 public class Ejemplar {
 
+    private Integer eid;
     private int numero;
 
     public Ejemplar(int numero) {
@@ -18,6 +19,20 @@ public class Ejemplar {
     }
 
     public Ejemplar() {
+    }
+
+    /**
+     * @return the eid
+     */
+    public Integer getEid() {
+        return eid;
+    }
+
+    /**
+     * @param eid the eid to set
+     */
+    public void setEid(Integer eid) {
+        this.eid = eid;
     }
 
     /**

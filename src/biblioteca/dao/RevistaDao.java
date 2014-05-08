@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package biblioteca.dao;
 
-import biblioteca.domain.Libro;
+import biblioteca.domain.Revista;
 
 /**
  *
  * @author guillermo
  */
-public interface LibroDao extends Dao<Libro> {
-
-    public abstract Libro getLibroByIsbn(String isbn);
+public interface RevistaDao extends Dao<Revista> {
+    
 }

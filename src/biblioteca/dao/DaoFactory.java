@@ -7,6 +7,7 @@ package biblioteca.dao;
 
 import biblioteca.dao.sqlite.CdDaoSqlite;
 import biblioteca.dao.sqlite.LibroDaoSqlite;
+import biblioteca.dao.sqlite.RevistaDaoSqlite;
 import java.sql.*;
 
 /**
@@ -21,7 +22,7 @@ public class DaoFactory {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException err) {
-            System.out.println(err.toString());
+            System.err.println(err.toString());
         }
 
         try {
@@ -34,12 +35,14 @@ public class DaoFactory {
         return connection;
     }
 
+    public static CdDao getCdDao() {
+        return new CdDaoSqlite(DaoFactory.getConnectionDao());
+    }
     public static LibroDao getLibroDao() {
         return new LibroDaoSqlite(DaoFactory.getConnectionDao());
     }
     
-    public static CdDao getCdDao() {
-        return new CdDaoSqlite(DaoFactory.getConnectionDao());
+    public static RevistaDao getRevistaDao() {
+        return new RevistaDaoSqlite(DaoFactory.getConnectionDao());
     }
-    
 }

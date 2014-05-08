@@ -15,13 +15,13 @@ CREATE TABLE materiales (
 
 CREATE TABLE cds (
     cid             INTEGER PRIMARY KEY AUTOINCREMENT,
-    mid             INTEGER REFERENCES material(mid) ON DELETE CASCADE
+    mid             INTEGER REFERENCES materiales(mid) ON DELETE CASCADE
 );
 
 CREATE TABLE libros (
     lid             INTEGER PRIMARY KEY AUTOINCREMENT,
     mid             INTEGER REFERENCES materiales(mid) ON DELETE CASCADE,
-    cid             INTEGER REFERENCES cds(cid) ON DELETE CASCADE,
+    cid             INTEGER REFERENCES cds(cid) ON DELETE SET NULL,
     isbn            TEXT,
     autor           TEXT NOT NULL
 );
@@ -29,7 +29,7 @@ CREATE TABLE libros (
 CREATE TABLE revistas (
     rid             INTEGER PRIMARY KEY AUTOINCREMENT,
     mid             INTEGER REFERENCES materiales(mid) ON DELETE CASCADE,
-    cid             INTEGER REFERENCES cds(cid) ON DELETE CASCADE,
+    cid             INTEGER REFERENCES cds(cid) ON DELETE SET NULL,
     periodicidad    TEXT NOT NULL CHECK (periodicidad IN ('Quincenal', 'Mensual', 'Trimestral'))
     
 );

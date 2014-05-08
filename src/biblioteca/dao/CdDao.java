@@ -12,6 +12,6 @@ import biblioteca.domain.Cd;
  *
  * @author guillermo
  */
-public abstract class CdDao implements Dao<Cd> {
+public interface CdDao extends Dao<Cd> {
     
 }
