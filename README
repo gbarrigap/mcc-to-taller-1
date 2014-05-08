@@ -1,40 +1,5 @@
-- Materiales
-    - Administrar
-        - Agregar
-            - Libro
-            - Revista
-            - CD
-        - Editar
-        - Eliminar
-    - Consultas
-        - Listar
-            - Libros
-            - Revistas
-            - CDs
-        - Contar
-            - Libros
-            - Revistas
-            - CDs
-            - Todo
-        - Buscar
-            - Libro
-            - Revista
-            - CD
+# Taller 1 - Tecnología de Objetos
 
-- Usuarios
-    - Administrar
-        - Agregar
-        - Editar
-        - Eliminar
-    - Consultas
-
-- Prestamos
-    - Prestar material
-    - Consultas
-
-
-
-Listar libros
-    - Todos
-    - Disponibles para préstamo
-    - No disponibles para préstamo
+## ToDo List
+- Limpiar comentarios
+- Estandarizar nombres de variables
