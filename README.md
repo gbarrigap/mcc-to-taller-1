@@ -5,6 +5,10 @@
 * Comentar código donde corresponda
 * Eliminar código comentado (commented out)
 * Estandarizar nombres de variables
+* En biblioteca.dao.Dao, ¿es correcto el método retrieve(T t)?, ¿cambiar por
+un método load(T t)?, ¿delegar la carga al objeto del dominio?
+* ¿Será necesario una clase biblioteca.dao.MaterialDao para acceder a todos los
+materiales del repositorio en una llamada?
 
 ## Descripción de la problemática
 
