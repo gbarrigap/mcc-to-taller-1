@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class BibliotecaTester {
 
-    public static void showCds() {
+    private static void showCds() {
         List<Cd> cds = DaoFactory.getCdDao().retrieveAll();
 
         System.out.println(String.format("*** CDS EXISTENTES (%d) ***", cds.size()));
@@ -31,7 +31,7 @@ public class BibliotecaTester {
         System.out.println("--");
     }
 
-    public static void showLibros() {
+    private static void showLibros() {
         List<Libro> libros = DaoFactory.getLibroDao().retrieveAll();
 
         System.out.println(String.format("*** LIBROS EXISTENTES (%d) ***", libros.size()));
@@ -53,7 +53,7 @@ public class BibliotecaTester {
         System.out.println("--");
     }
 
-    public static void showRevistas() {
+    private static void showRevistas() {
         List<Revista> revistas = DaoFactory.getRevistaDao().retrieveAll();
 
         System.out.println(String.format("*** REVISTAS EXISTENTES (%d) ***", revistas.size()));
@@ -74,18 +74,46 @@ public class BibliotecaTester {
         System.out.println("--");
     }
 
-    public static void showExistencias() {
+    private static void showExistencias() {
         showCds();
         showLibros();
         showRevistas();
     }
 
-    public static void main(String[] args) {
-
-        runTests();
-    }
-
-    private static void runTests() {
+    /**
+     * Agrega, asocia y elimina materiales, demostrando la funcionalidad del
+     * programa.
+     * <p>
+     * Realiza operaciones para demostrar la funcionalidad del programa,
+     * agregando, asociando y eliminando materiales, de acuerdo a las
+     * restricciones propuestas, de la siguiente forma:
+     * 
+     * <ol>
+     * <li>Muestra el estado actual de las existencias, contabilizando
+     * cada tipo de material junto al encabezado.
+     * 
+     * <li>Agrega CDs y muestra nuevamente las existencias para ver los
+     * cambios; es decir, la presencia de dos nuevos CD.
+     * 
+     * <li>Agrega un libro y le asocia un CD, previamente agregado, y muestra
+     * las existencias para ver los cambios; un nuevo libro con un CD asociado.
+     * Lo anterior sólo modifica el total de libros, no el de CDs.
+     * 
+     * <li>Agrega una revista y le asocia un CD, previamente agregado, y muestra
+     * las existencias para ver los cambios; una nueva revista con un CD
+     * asociado. Lo anterior sólo modifica el total de revistas, no el de CDs.
+     * 
+     * <li>Elimina uno a uno los materiales agregados, y muestra los cambios
+     * por cada operación. Primero se elimina la revista y se muestran las
+     * existencias; luego se elimina el libro y se muestran las existencias;
+     * finalmente se elimina el CD y se muestran las existencias.
+     * </ul>
+     * 
+     * <p>
+     * Una vez ejecutado este método, las existencias se encuentran como antes
+     * de su ejecución.
+     */
+    public static void runTests() {
         // Se muestran todos los materiales existentes.
         showExistencias();
 
@@ -93,7 +121,6 @@ public class BibliotecaTester {
 
         // Se agregan CDs.
         Cd cdImagenes = new Cd("Imágenes de La ciudad y de los perros", "Alfaguara Digital");
-
         Cd cdOvnis = new Cd("Imágenes de avistamientos de ovnis", "Televisa S.A.");
 
         // Se agregan ejemplares de los CDs.
@@ -122,7 +149,7 @@ public class BibliotecaTester {
             book.addEjemplar(new Ejemplar(i));
         }
 
-        // Se agrega un CD asociado al libro.
+        // Se asocia un CD asociado al libro.
         book.setCd(cdImagenes);
 
         // Se guarda el libro.
@@ -141,7 +168,7 @@ public class BibliotecaTester {
             magazine.addEjemplar(new Ejemplar(i));
         }
 
-        // Se agrega un CD a la revista.
+        // Se asocia un CD a la revista.
         magazine.setCd(cdOvnis);
 
         // Se guarda la revista.

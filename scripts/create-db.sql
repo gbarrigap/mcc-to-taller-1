@@ -22,7 +22,7 @@ CREATE TABLE libros (
     lid             INTEGER PRIMARY KEY AUTOINCREMENT,
     mid             INTEGER REFERENCES materiales(mid) ON DELETE CASCADE,
     cid             INTEGER REFERENCES cds(cid) ON DELETE SET NULL,
-    isbn            TEXT,
+    isbn            TEXT UNIQUE,
     autor           TEXT NOT NULL
 );
 
@@ -30,7 +30,7 @@ CREATE TABLE revistas (
     rid             INTEGER PRIMARY KEY AUTOINCREMENT,
     mid             INTEGER REFERENCES materiales(mid) ON DELETE CASCADE,
     cid             INTEGER REFERENCES cds(cid) ON DELETE SET NULL,
-    periodicidad    TEXT NOT NULL CHECK (periodicidad IN ('Quincenal', 'Mensual', 'Trimestral'))
+    periodicidad    TEXT NOT NULL CHECK (periodicidad IN ('Quincenal', 'Mensual', 'Trimestral', 'Semanal'))
     
 );
 

@@ -5,8 +5,6 @@
  */
 package biblioteca;
 
-import biblioteca.ui.cli.BibliotecaCli;
-
 /**
  *
  *
@@ -18,9 +16,6 @@ public class Biblioteca {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
-        BibliotecaCli.showMenuPrincipal();
-
+        BibliotecaTester.runTests();
     }
-
 }
