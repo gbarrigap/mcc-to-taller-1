@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package biblioteca;
 
 import biblioteca.dao.DaoFactory;
@@ -13,11 +8,15 @@ import biblioteca.domain.Revista;
 import java.util.List;
 
 /**
- *
- * @author guillermo
+ * Esta clase implementa métodos para demostrar la funcionalidad del programa.
+ * 
+ * @see BibliotecaTester.runTests
  */
-public class BibliotecaTester {
+public final class BibliotecaTester {
 
+    /**
+     * Muestra los CDs existentes y un conteo del total.
+     */
     private static void showCds() {
         List<Cd> cds = DaoFactory.getCdDao().retrieveAll();
 
@@ -31,6 +30,12 @@ public class BibliotecaTester {
         System.out.println("--");
     }
 
+    /**
+     * Muestra los libros existentes y un conteo del total.
+     * <p>
+     * Por cada libro muestra los datos relevantes; en caso de tener asociado
+     * un CD muestra los datos correspondientes con sangría apropropiada.
+     */
     private static void showLibros() {
         List<Libro> libros = DaoFactory.getLibroDao().retrieveAll();
 
@@ -53,6 +58,12 @@ public class BibliotecaTester {
         System.out.println("--");
     }
 
+    /**
+     * Muestra las revistas existentes y un conteo del total.
+     * <p>
+     * Por cada revista muestra los datos relevantes; en caso de tener asociado
+     * un CD muestra los datos correspondientes con sangría apropropiada.
+     */
     private static void showRevistas() {
         List<Revista> revistas = DaoFactory.getRevistaDao().retrieveAll();
 
@@ -74,6 +85,13 @@ public class BibliotecaTester {
         System.out.println("--");
     }
 
+    /**
+     * Muestra los materiales existentes y un conteo parcial del total.
+     * 
+     * @see biblioteca.BibliotecaTester.showCds
+     * @see biblioteca.BibliotecaTester.showLibros
+     * @see biblioteca.BibliotecaTester.showRevistas
+     */
     private static void showExistencias() {
         showCds();
         showLibros();
@@ -107,7 +125,7 @@ public class BibliotecaTester {
      * por cada operación. Primero se elimina la revista y se muestran las
      * existencias; luego se elimina el libro y se muestran las existencias;
      * finalmente se elimina el CD y se muestran las existencias.
-     * </ul>
+     * </ol>
      * 
      * <p>
      * Una vez ejecutado este método, las existencias se encuentran como antes
@@ -117,9 +135,9 @@ public class BibliotecaTester {
         // Se muestran todos los materiales existentes.
         showExistencias();
 
+        // Se agregan CDs.
         System.out.println("AGREGANDO CDS");
 
-        // Se agregan CDs.
         Cd cdImagenes = new Cd("Imágenes de La ciudad y de los perros", "Alfaguara Digital");
         Cd cdOvnis = new Cd("Imágenes de avistamientos de ovnis", "Televisa S.A.");
 
@@ -139,9 +157,9 @@ public class BibliotecaTester {
         // Se muestran los materiales existentes.
         showExistencias();
 
+        // Se agrega un libro.
         System.out.println("AGREGANDO LIBRO");
 
-        // Se agrega un libro.
         Libro book = new Libro("978-84-204-1233-7", "La ciudad y los perros", "Mario Vargas Llosa", "Alfaguara");
 
         // Se agregan ejemplares del libro.
@@ -158,9 +176,9 @@ public class BibliotecaTester {
         // Se muestran nuevamente los materiales existentes.
         showExistencias();
 
+        // Se agrega una revista.
         System.out.println("AGREGANDO REVISTA");
 
-        // Se agrega una revista.
         Revista magazine = new Revista("Conozca Más", "Televisa S.A.", "Mensual");
 
         // Se agregan ejemplares de la revista.
@@ -177,25 +195,25 @@ public class BibliotecaTester {
         // Se muestran los materiales existentes.
         showExistencias();
 
-        System.out.println("BORRANDO LIBRO");
-
         // Se elimina el libro recién agregado.
+        System.out.println("BORRANDO LIBRO");
+        
         book.delete();
-
+        
         // Se muestran los materiales existentes.
         showExistencias();
 
+        // Se elimina la revista recién agregada.
         System.out.println("BORRANDO REVISTA");
 
-        // Se elimina la revista recién agregada.
         magazine.delete();
 
         // Se muestran los materiales existentes.
         showExistencias();
 
+        // Se eliminan los CDs recién agregados.
         System.out.println("BORRANDO CDS");
 
-        // Se eliminan los CDs recién agregados.
         cdImagenes.delete();
         cdOvnis.delete();
 

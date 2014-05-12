@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package biblioteca.dao.sqlite;
 
-import biblioteca.dao.DaoFactory;
 import biblioteca.dao.LibroDao;
 import biblioteca.domain.Cd;
 import biblioteca.domain.Ejemplar;
@@ -18,8 +12,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- *
- * @author guillermo
+ * Implementa el acceso a libros almacenados en una base de datos Sqlite.
  */
 public class LibroDaoSqlite implements LibroDao {
 
@@ -36,10 +29,12 @@ public class LibroDaoSqlite implements LibroDao {
         try {
             Statement statement = this.connection.createStatement();
 
-            // Primero se cargan los datos del libro.
+            // Se obtiene el identificador del libro con el isbn recibido.
             String query = String.format("SELECT lid FROM libros WHERE isbn = '%s'", isbn);
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
+                // Se carga el libro con el método tradicional de carga,
+                // utilizando el identificador obtenido.
                 book = this.retrieve(Integer.parseInt(rs.getString("lid")));
             }
         } catch (SQLException err) {
@@ -51,14 +46,10 @@ public class LibroDaoSqlite implements LibroDao {
 
     @Override
     public void create(Libro b) {
-        //String bookMid = null;
-        //String cdMid = null;
-        //String cdCid = null;
-
         try {
             Statement statement = this.connection.createStatement();
 
-            // Insert material.
+            // Inserta el material.
             String insertCmd = String.format("INSERT INTO materiales (titulo, editorial) VALUES ('%s', '%s')", b.getTitulo(), b.getEditorial());
             statement.executeUpdate(insertCmd);
 
@@ -66,38 +57,10 @@ public class LibroDaoSqlite implements LibroDao {
             String getLastKeyQuery = "SELECT max(mid) AS mid FROM materiales";
             ResultSet rs = statement.executeQuery(getLastKeyQuery);
             while (rs.next()) {
-                //bookMid = rs.getString("mid");
                 b.setMid(rs.getInt("mid"));
             }
 
-            /*// Insert CD?
-            if (b.hasCd()) {
-                insertCmd = String.format("INSERT INTO materiales (titulo, editorial) VALUES ('%s', '%s')", b.getCd().getTitulo(), b.getCd().getEditorial());
-                statement.executeUpdate(insertCmd);
-
-                // Obtiene el identificador del material (Libro) insertado.
-                getLastKeyQuery = "SELECT max(mid) AS mid FROM materiales";
-                rs = statement.executeQuery(getLastKeyQuery);
-                while (rs.next()) {
-                    //cdMid = rs.getString("mid");
-                    //cdMid = Integer.toString(rs.getInt(1));
-                    b.getCd().setMid(rs.getInt("mid"));
-                }
-
-                insertCmd = String.format("INSERT INTO cds (mid) VALUES (%s)", b.getCd().getMid());
-                statement.executeUpdate(insertCmd);
-
-                // Obtiene el identificador del CD insertado.
-                getLastKeyQuery = "SELECT max(cid) AS cid FROM cds";
-                rs = statement.executeQuery(getLastKeyQuery);
-                while (rs.next()) {
-                    //cdCid = rs.getString("cid");
-                    //cdCid = Integer.toString(rs.getInt(1));
-                    b.getCd().setCid(rs.getInt("cid"));
-                }
-            }*/
-
-            // Insert libro.
+            // Inserta el libro.
             String cid = b.hasCd() ? b.getCd().getCid().toString() : "NULL";
             insertCmd = String.format("INSERT INTO libros (mid, cid, isbn, autor) VALUES (%d, %s, '%s', '%s')", b.getMid(), cid, b.getIsbn(), b.getAutor());
             statement.executeUpdate(insertCmd);
@@ -107,7 +70,7 @@ public class LibroDaoSqlite implements LibroDao {
                 for (Ejemplar ejemplar : b.getEjemplares()) {
                     insertCmd = String.format("INSERT INTO ejemplares (mid, numero) VALUES (%d, %d)", b.getMid(), ejemplar.getNumero());
                     statement.executeUpdate(insertCmd);
-                    
+
                     // Obtiene el identificador del ejemplar almacenado.
                     getLastKeyQuery = "SELECT max(eid) AS eid FROM ejemplares";
                     rs = statement.executeQuery(getLastKeyQuery);
@@ -121,6 +84,11 @@ public class LibroDaoSqlite implements LibroDao {
         }
     }
 
+    /**
+     * @todo Utilizar método retrieve(int lid)
+     * @param book
+     * @return
+     */
     @Override
     public Libro retrieve(Libro book) {
         try {
@@ -187,7 +155,6 @@ public class LibroDaoSqlite implements LibroDao {
 
             // Se carga el CD asociado al libro, si existe.
             // @todo Usar método "retrieve" del CD para cargar datos y ejemplares.
-            //query = String.format("SELECT cid, c.mid AS mid, titulo, editorial FROM materiales m JOIN (libros l JOIN cds c USING (cid)) ON (m.mid = c.mid) WHERE isbn = '%s'", isbn);
             query = String.format("SELECT cid, mid, titulo, editorial FROM materiales JOIN (SELECT cds.* FROM libros JOIN cds USING (cid) WHERE lid = %d) USING (mid)", lid);
             rs = statement.executeQuery(query);
             while (rs.next()) {
@@ -207,7 +174,7 @@ public class LibroDaoSqlite implements LibroDao {
     }
 
     @Override
-    public Libro update(Libro book) {
+    public void update(Libro book) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -246,10 +213,5 @@ public class LibroDaoSqlite implements LibroDao {
         }
 
         return books;
-    }
-
-    @Override
-    public int getCount() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

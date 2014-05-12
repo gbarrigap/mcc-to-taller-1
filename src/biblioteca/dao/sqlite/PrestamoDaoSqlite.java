@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package biblioteca.dao.sqlite;
 
 import biblioteca.dao.PrestamoDao;
@@ -13,8 +7,7 @@ import biblioteca.domain.Usuario;
 import java.util.List;
 
 /**
- *
- * @author guillermo
+ * Implementa el acceso a préstamos almacenados en una base de datos Sqlite.
  */
 public class PrestamoDaoSqlite extends PrestamoDao {
 
@@ -54,7 +47,7 @@ public class PrestamoDaoSqlite extends PrestamoDao {
     }
 
     @Override
-    public Prestamo update(Prestamo p) {
+    public void update(Prestamo p) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -68,9 +61,4 @@ public class PrestamoDaoSqlite extends PrestamoDao {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public int getCount() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }

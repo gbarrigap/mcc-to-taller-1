@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package biblioteca.dao.sqlite;
 
 import biblioteca.dao.CdDao;
@@ -17,8 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author guillermo
+ * Implementa el acceso a CDs almacenados en una base de datos Sqlite.
  */
 public class CdDaoSqlite implements CdDao {
 
@@ -30,11 +23,10 @@ public class CdDaoSqlite implements CdDao {
     
     @Override
     public void create(Cd cd) {
-        //String mid = null;
         try {
             Statement statement = this.connection.createStatement();
             
-            // Insert material.
+            // Inserta material.
             String insertCmd = String.format("INSERT INTO materiales (titulo, editorial) VALUES ('%s', '%s')", cd.getTitulo(), cd.getEditorial());
             statement.executeUpdate(insertCmd);
             
@@ -42,11 +34,10 @@ public class CdDaoSqlite implements CdDao {
             String getLastKeyQuery = "SELECT max(mid) AS mid FROM materiales";
             ResultSet rs = statement.executeQuery(getLastKeyQuery);
             while (rs.next()) {
-                //mid = rs.getString("mid");
                 cd.setMid(rs.getInt("mid"));
             }
             
-            // Insert CD.
+            // Inserta CD.
             insertCmd = String.format("INSERT INTO cds (mid) VALUES (%s)", cd.getMid());
             statement.executeUpdate(insertCmd);
             
@@ -69,7 +60,7 @@ public class CdDaoSqlite implements CdDao {
         try {
             Statement statement = this.connection.createStatement();
             
-            // Primero se cargan los datos del CD.
+            // Se cargan los datos del CD.
             String query = String.format("SELECT mid, titulo, editorial FROM cds JOIN materiales USING (mid) WHERE cid = %d", cid);
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
@@ -94,12 +85,12 @@ public class CdDaoSqlite implements CdDao {
     }
 
     @Override
-    public Cd retrieve(Cd t) {
+    public Cd retrieve(Cd cd) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Cd update(Cd cd) {
+    public void update(Cd cd) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -138,9 +129,4 @@ public class CdDaoSqlite implements CdDao {
         return cds;
     }
 
-    @Override
-    public int getCount() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package biblioteca.dao.sqlite;
 
 import biblioteca.dao.RevistaDao;
@@ -17,8 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author guillermo
+ * Implementa el acceso a revistas almacenadas en una base de datos Sqlite.
  */
 public class RevistaDaoSqlite implements RevistaDao {
 
@@ -33,7 +27,7 @@ public class RevistaDaoSqlite implements RevistaDao {
         try {
             Statement statement = this.connection.createStatement();
 
-            // Insert material.
+            // Inserta el material.
             String insertCmd = String.format("INSERT INTO materiales (titulo, editorial) VALUES ('%s', '%s')", magazine.getTitulo(), magazine.getEditorial());
             statement.executeUpdate(insertCmd);
 
@@ -44,30 +38,7 @@ public class RevistaDaoSqlite implements RevistaDao {
                 magazine.setMid(Integer.parseInt(rs.getString("mid")));
             }
 
-            /*// Insert CD?
-            if (magazine.hasCd()) {
-                insertCmd = String.format("INSERT INTO materiales (titulo, editorial) VALUES ('%s', '%s')", magazine.getCd().getTitulo(), magazine.getCd().getEditorial());
-                statement.executeUpdate(insertCmd);
-
-                // Obtiene el identificador del material (CD) insertado.
-                getLastKeyQuery = "SELECT max(mid) AS mid FROM materiales";
-                rs = statement.executeQuery(getLastKeyQuery);
-                while (rs.next()) {
-                    magazine.getCd().setMid(rs.getInt("mid"));
-                }
-
-                insertCmd = String.format("INSERT INTO cds (mid) VALUES (%d)", magazine.getCd().getMid());
-                statement.executeUpdate(insertCmd);
-
-                // Obtiene el identificador del CD insertado.
-                getLastKeyQuery = "SELECT max(cid) AS cid FROM cds";
-                rs = statement.executeQuery(getLastKeyQuery);
-                while (rs.next()) {
-                    magazine.getCd().setCid(rs.getInt("cid"));
-                }
-            }*/
-
-            // Insert revista.
+            // Inserta la revista.
             String cid = magazine.hasCd() ? magazine.getCd().getCid().toString() : "NULL";
             insertCmd = String.format("INSERT INTO revistas (mid, periodicidad, cid) VALUES (%d, '%s', %s)", magazine.getMid(), magazine.getPeriodicidad(), cid);
             statement.executeUpdate(insertCmd);
@@ -119,7 +90,6 @@ public class RevistaDaoSqlite implements RevistaDao {
             
             // Se carga el CD asociado a la revista, si existe.
             // @todo Usar método "retrieve" del CD para cargar datos y ejemplares.
-            //query = String.format("SELECT cid, c.mid AS mid, titulo, editorial FROM materiales m JOIN (libros l JOIN cds c USING (cid)) ON (m.mid = c.mid) WHERE isbn = '%s'", isbn);
             query = String.format("SELECT cid, mid, titulo, editorial FROM materiales JOIN (SELECT cds.* FROM revistas JOIN cds USING (cid) WHERE rid = %d) USING (mid)", rid);
             rs = statement.executeQuery(query);
             while (rs.next()) {
@@ -144,7 +114,7 @@ public class RevistaDaoSqlite implements RevistaDao {
     }
 
     @Override
-    public Revista update(Revista t) {
+    public void update(Revista t) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -181,11 +151,6 @@ public class RevistaDaoSqlite implements RevistaDao {
         }
 
         return books;
-    }
-
-    @Override
-    public int getCount() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

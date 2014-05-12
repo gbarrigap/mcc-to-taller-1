@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package biblioteca.ui.cli;
 
 import biblioteca.dao.CdDao;
@@ -16,12 +11,10 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 /**
- *
- * @author guillermo
+ * Implementa una interfaz de línea de comandos para este programa.
  */
 public class BibliotecaCli {
 
-    //private static DataInputStream in = new DataInputStream(System.in);
     private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
     private static void agregarCD() {

@@ -1,0 +1,6 @@
+biblioteca
+biblioteca.dao
+biblioteca.dao.sqlite
+biblioteca.domain
+biblioteca.ui.cli
+biblioteca.ui.gui
