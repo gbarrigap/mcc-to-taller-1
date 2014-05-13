@@ -4,23 +4,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author guillermo
+ * Representa un material de la biblioteca.
+ * <p>
+ * Define atributos generales que los materiales de la biblioteca poseen, y un
+ * listado de ejemplares asociado a este material.
+ * <p>
+ * Dado que esta es una clase abstracta, sólo presenta funcionalidad común de
+ * los materiales; la funcionalidad propia de cada material se debe implementar
+ * en la clase respectiva.
  */
 public abstract class Material {
 
+    /**
+     * Identificador de este material.
+     * <p>
+     * Se usa un tipo de dato <code>Integer</code> porque puede no estar
+     * definido, es decir, ser <code>null</code>.
+     */
     private Integer mid;
     private String titulo;
     private String editorial;
     private List<Ejemplar> ejemplares;
 
+    /**
+     * Constructor vacío.
+     * <p>
+     * El constructor permite que se cree una instancia sin parámetro alguno,
+     * para luego inicializar los atributos cuando fuere necesario.
+     */
     public Material() {
     }
 
     public Material(String titulo, String editorial) {
         this.titulo = titulo;
         this.editorial = editorial;
-        this.ejemplares = new ArrayList<Ejemplar>();
+        this.ejemplares = new ArrayList<>();
     }
 
     public Material(String titulo, String editorial, List<Ejemplar> ejemplares) {
@@ -35,100 +53,52 @@ public abstract class Material {
         this.mid = mid;
     }
 
-    /**
-     * @return the titulo
-     */
     public String getTitulo() {
         return titulo;
     }
 
-    /**
-     * @param titulo the titulo to set
-     */
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
 
-    /**
-     * @return the editorial
-     */
     public String getEditorial() {
         return editorial;
     }
 
-    /**
-     * @param editorial the editorial to set
-     */
     public void setEditorial(String editorial) {
         this.editorial = editorial;
     }
 
-    /*
-     private void setPrestado(boolean prestado) {
-     this.prestado = prestado;
-     }
-
-     public boolean isPrestado() {
-     return this.prestado;
-     }
-     */
-    /*
-     public void prestar() {
-     this.prestado = true;
-     }
-
-     public void devolver() {
-     this.prestado = false;
-     }
-     */
-    /**
-     * @return the mid
-     */
     public Integer getMid() {
         return mid;
     }
 
-    /**
-     * @param mid the mid to set
-     */
     public void setMid(Integer mid) {
         this.mid = mid;
     }
 
-    /**
-     * @return the numeroCopia
-     */
-    /*
-     public int getNumeroCopia() {
-     return numeroCopia;
-     }
-     */
-    /**
-     * @param numeroCopia the numeroCopia to set
-     */
-    /*
-     public void setNumeroCopia(int numeroCopia) {
-     this.numeroCopia = numeroCopia;
-     }
-     */
-    /**
-     * @return the ejemplares
-     */
     public List<Ejemplar> getEjemplares() {
         return ejemplares;
     }
 
-    /**
-     * @param ejemplares the ejemplares to set
-     */
     public void setEjemplares(List<Ejemplar> ejemplares) {
         this.ejemplares = ejemplares;
     }
-    
+
+    /**
+     * Indica si este material tiene ejemplares asociados.
+     * 
+     * @return true si este ejemplar tiene materiales
+     */
     public boolean hasEjemplares() {
         return this.ejemplares != null && !this.ejemplares.isEmpty();
     }
 
+    /**
+     * Agrega un ejemplar a este material.
+     * 
+     * @param ejemplar El ejemplar que se agregará
+     */
     public void addEjemplar(Ejemplar ejemplar) {
         // Si no existe una lista de ejemplares,
         // se inicializa una.
@@ -136,7 +106,20 @@ public abstract class Material {
             this.ejemplares = new ArrayList<>();
         }
 
-        this.ejemplares.add(ejemplar);
+        // Se agrega el ejemplar a la lista de ejemplares,
+        // siempre y cuando no haya sido agregado antes.
+        if (!this.ejemplares.contains(ejemplar)) {
+            this.ejemplares.add(ejemplar);
+        }
+    }
+    
+    /**
+     * Agrega una lista de ejemplares a este material.
+     * 
+     * @param ejemplares Lista de ejemplares
+     */
+    public void addEjemplares(List<Ejemplar> ejemplares) {
+        this.ejemplares.addAll(ejemplares);
     }
 
     public void getEjemplar(Ejemplar ejemplar) {

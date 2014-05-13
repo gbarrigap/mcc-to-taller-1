@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Implementa el acceso a revistas almacenadas en una base de datos Sqlite.
@@ -103,6 +105,8 @@ public class RevistaDaoSqlite implements RevistaDao {
             }
         } catch (SQLException err) {
             System.err.println(err.toString());
+        } catch (Revista.PeriodicidadInvalidaException ex) {
+            Logger.getLogger(RevistaDaoSqlite.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return magazine;

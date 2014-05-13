@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package biblioteca.domain;
 
 import biblioteca.dao.DaoFactory;
@@ -10,13 +5,27 @@ import biblioteca.dao.RevistaDao;
 import java.util.List;
 
 /**
- *
- * @author guillermo
+ * Representa una revista de la biblioteca.
  */
 public class Revista extends Material {
+    
+    /**
+     * La frecuencia de publicación de esta revista.
+     * <p>
+     * Permite controlar la creación de revistas con una frecuencia válida.
+     * 
+     * @see biblioteca.domain.Revista.PeriodicidadInvalidaException
+     */
+    public enum Periodicidad { Mensual, Quincenal, Semanal };
 
+    /**
+     * Identificador de esta revista.
+     * <p>
+     * Se usa un tipo de dato <code>Integer</code> porque puede no estar
+     * definido, es decir, ser <code>null</code>.
+     */
     private Integer rid;
-    private String periodicidad;
+    private Periodicidad periodicidad;
     private Cd cd;
 
     public Revista() {
@@ -26,11 +35,11 @@ public class Revista extends Material {
     public Revista(String titulo, String editorial) {
         super(titulo, editorial);
     }
-    
-    public Revista(String titulo, String editorial, String periodicidad) {
+
+    public Revista(String titulo, String editorial, String periodicidad) throws PeriodicidadInvalidaException {
         super(titulo, editorial);
-        
-        this.periodicidad = periodicidad;
+
+        this.setPeriodicidad(periodicidad);
     }
 
     public Revista(String titulo, String editorial, Cd cd) {
@@ -52,44 +61,43 @@ public class Revista extends Material {
         this.cd = cd;
     }
 
-    /**
-     * @return the rid
-     */
     public Integer getRid() {
         return rid;
     }
 
-    /**
-     * @param rid the rid to set
-     */
     public void setRid(Integer rid) {
         this.rid = rid;
     }
 
     /**
-     * @return the periodicidad
+     * @return Periodicidad la frecuencia de publicación de esta revista
+     * @see this.setPeriodicidad
      */
-    public String getPeriodicidad() {
+    public Periodicidad getPeriodicidad() {
         return periodicidad;
     }
 
     /**
-     * @param periodicidad the periodicidad to set
+     * @param periodicidad La frecuencia de publicación de esta revista. La
+     * periodicidad puede ser mensual, quincenal, semanal, etc.
+     * @throws biblioteca.domain.Revista.PeriodicidadInvalidaException
      */
-    public void setPeriodicidad(String periodicidad) {
+    public final void setPeriodicidad(String periodicidad) throws PeriodicidadInvalidaException {
+        try {
+            this.periodicidad = Periodicidad.valueOf(periodicidad);
+        } catch (Exception err) {
+            throw new PeriodicidadInvalidaException(err.toString());
+        }
+    }
+    
+    public void setPeriodicidad(Periodicidad periodicidad) {
         this.periodicidad = periodicidad;
     }
 
-    /**
-     * @return the cd
-     */
     public Cd getCd() {
         return cd;
     }
 
-    /**
-     * @param cd the cd to set
-     */
     public void setCd(Cd cd) {
         this.cd = cd;
     }
@@ -113,5 +121,14 @@ public class Revista extends Material {
     @Override
     public void load() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * Exception para capturar errores en la periodicidad de una revista.
+     */
+    public class PeriodicidadInvalidaException extends Exception {
+        public PeriodicidadInvalidaException(String message) {
+            super(message);
+        }
     }
 }

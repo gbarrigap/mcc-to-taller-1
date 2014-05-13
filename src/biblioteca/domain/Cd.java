@@ -4,7 +4,7 @@ import biblioteca.dao.DaoFactory;
 import java.util.List;
 
 /**
- *
+ * Representa un CD de la biblioteca.
  */
 public class Cd extends Material {
 
@@ -27,20 +27,15 @@ public class Cd extends Material {
         this.cid = cid;
     }
 
-    /**
-     * @return the cid
-     */
     public Integer getCid() {
         return cid;
     }
 
-    /**
-     * @param cid the cid to set
-     */
     public void setCid(Integer cid) {
         this.cid = cid;
     }
 
+    @Override
     public void persist() {
         DaoFactory.getCdDao().create(this);
     }

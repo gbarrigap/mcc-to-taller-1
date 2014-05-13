@@ -1,20 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package biblioteca.domain;
 
 import biblioteca.dao.DaoFactory;
-import biblioteca.dao.LibroDao;
 import java.util.List;
 
 /**
- *
- * @author guillermo
+ * Representa un libro de la biblioteca.
  */
 public class Libro extends Material {
 
+    /**
+     * Identificador de este libro.
+     * <p>
+     * Se usa un tipo de dato <code>Integer</code> porque puede no estar
+     * definido, es decir, ser <code>null</code>.
+     */
     private Integer lid;
     private String isbn;
     private String autor;
@@ -54,76 +53,54 @@ public class Libro extends Material {
         this.cd = cd;
     }
 
-    /**
-     * @return the lid
-     */
     public Integer getLid() {
         return lid;
     }
 
-    /**
-     * @param lid the lid to set
-     */
     public void setLid(Integer lid) {
         this.lid = lid;
     }
 
-    /**
-     * @return the isbn
-     */
     public String getIsbn() {
         return isbn;
     }
 
-    /**
-     * @param isbn the isbn to set
-     */
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 
-    /**
-     * @return the autor
-     */
     public String getAutor() {
         return autor;
     }
 
-    /**
-     * @param autor the autor to set
-     */
     public void setAutor(String autor) {
         this.autor = autor;
     }
 
-    /**
-     * @return the cd
-     */
     public Cd getCd() {
         return cd;
     }
 
-    /**
-     * @param cd the cd to set
-     */
     public void setCd(Cd cd) {
         this.cd = cd;
     }
 
+    /**
+     * @return boolean <code>true</code> si este libro tiene un CD asociado,
+     * de lo contrario, <code>false</code>.
+     */
     public boolean hasCd() {
         return this.cd != null;
     }
 
     @Override
     public void persist() {
-        LibroDao dao = DaoFactory.getLibroDao();
-        dao.create(this);
+        DaoFactory.getLibroDao().create(this);
     }
 
     @Override
     public void delete() {
-        LibroDao dao = DaoFactory.getLibroDao();
-        dao.delete(this);
+        DaoFactory.getLibroDao().delete(this);
     }
 
     @Override

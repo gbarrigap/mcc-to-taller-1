@@ -6,6 +6,8 @@ import biblioteca.domain.Ejemplar;
 import biblioteca.domain.Libro;
 import biblioteca.domain.Revista;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Esta clase implementa métodos para demostrar la funcionalidad del programa.
@@ -132,92 +134,97 @@ public final class BibliotecaTester {
      * de su ejecución.
      */
     public static void runTests() {
-        // Se muestran todos los materiales existentes.
-        showExistencias();
-
-        // Se agregan CDs.
-        System.out.println("AGREGANDO CDS");
-
-        Cd cdImagenes = new Cd("Imágenes de La ciudad y de los perros", "Alfaguara Digital");
-        Cd cdOvnis = new Cd("Imágenes de avistamientos de ovnis", "Televisa S.A.");
-
-        // Se agregan ejemplares de los CDs.
-        for (int i = 0; i < 4; i++) {
-            cdImagenes.addEjemplar(new Ejemplar(i));
+        try {
+            // Se muestran todos los materiales existentes.
+            showExistencias();
+            
+            // Se agregan CDs.
+            System.out.println("AGREGANDO CDS");
+            
+            Cd cdImagenes = new Cd("Imágenes de La ciudad y de los perros", "Alfaguara Digital");
+            Cd cdOvnis = new Cd("Imágenes de avistamientos de ovnis", "Televisa S.A.");
+            
+            // Se agregan ejemplares de los CDs.
+            for (int i = 0; i < 4; i++) {
+                cdImagenes.addEjemplar(new Ejemplar(i));
+            }
+            
+            for (int i = 0; i < 4; i++) {
+                cdOvnis.addEjemplar(new Ejemplar(i));
+            }
+            
+            // Se guardan los CDs.
+            cdImagenes.persist();
+            cdOvnis.persist();
+            
+            // Se muestran los materiales existentes.
+            showExistencias();
+            
+            // Se agrega un libro.
+            System.out.println("AGREGANDO LIBRO");
+            
+            Libro book = new Libro("978-84-204-1233-7", "La ciudad y los perros", "Mario Vargas Llosa", "Alfaguara");
+            
+            // Se agregan ejemplares del libro.
+            for (int i = 1; i < 5; i++) {
+                book.addEjemplar(new Ejemplar(i));
+            }
+            
+            // Se asocia un CD asociado al libro.
+            book.setCd(cdImagenes);
+            
+            // Se guarda el libro.
+            book.persist();
+            
+            // Se muestran nuevamente los materiales existentes.
+            showExistencias();
+            
+            // Se agrega una revista.
+            System.out.println("AGREGANDO REVISTA");
+            
+            Revista magazine = new Revista("Conozca Más", "Televisa S.A.", "Mensual");
+            
+            // Se agregan ejemplares de la revista.
+            for (int i = 1; i < 3; i++) {
+                magazine.addEjemplar(new Ejemplar(i));
+            }
+            
+            // Se asocia un CD a la revista.
+            magazine.setCd(cdOvnis);
+            
+            // Se guarda la revista.
+            magazine.persist();
+            
+            // Se muestran los materiales existentes.
+            showExistencias();
+            
+            // Se elimina el libro recién agregado.
+            System.out.println("BORRANDO LIBRO");
+            
+            book.delete();
+            
+            // Se muestran los materiales existentes.
+            showExistencias();
+            
+            // Se elimina la revista recién agregada.
+            System.out.println("BORRANDO REVISTA");
+            
+            magazine.delete();
+            
+            // Se muestran los materiales existentes.
+            showExistencias();
+            
+            // Se eliminan los CDs recién agregados.
+            System.out.println("BORRANDO CDS");
+            
+            cdImagenes.delete();
+            cdOvnis.delete();
+            
+            // Se muestran los materiales existentes.
+            showExistencias();
+        } catch (Revista.PeriodicidadInvalidaException ex) {
+            //Logger.getLogger(BibliotecaTester.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.toString());
         }
-
-        for (int i = 0; i < 4; i++) {
-            cdOvnis.addEjemplar(new Ejemplar(i));
-        }
-
-        // Se guardan los CDs.
-        cdImagenes.persist();
-        cdOvnis.persist();
-
-        // Se muestran los materiales existentes.
-        showExistencias();
-
-        // Se agrega un libro.
-        System.out.println("AGREGANDO LIBRO");
-
-        Libro book = new Libro("978-84-204-1233-7", "La ciudad y los perros", "Mario Vargas Llosa", "Alfaguara");
-
-        // Se agregan ejemplares del libro.
-        for (int i = 1; i < 5; i++) {
-            book.addEjemplar(new Ejemplar(i));
-        }
-
-        // Se asocia un CD asociado al libro.
-        book.setCd(cdImagenes);
-
-        // Se guarda el libro.
-        book.persist();
-
-        // Se muestran nuevamente los materiales existentes.
-        showExistencias();
-
-        // Se agrega una revista.
-        System.out.println("AGREGANDO REVISTA");
-
-        Revista magazine = new Revista("Conozca Más", "Televisa S.A.", "Mensual");
-
-        // Se agregan ejemplares de la revista.
-        for (int i = 1; i < 3; i++) {
-            magazine.addEjemplar(new Ejemplar(i));
-        }
-
-        // Se asocia un CD a la revista.
-        magazine.setCd(cdOvnis);
-
-        // Se guarda la revista.
-        magazine.persist();
-
-        // Se muestran los materiales existentes.
-        showExistencias();
-
-        // Se elimina el libro recién agregado.
-        System.out.println("BORRANDO LIBRO");
-        
-        book.delete();
-        
-        // Se muestran los materiales existentes.
-        showExistencias();
-
-        // Se elimina la revista recién agregada.
-        System.out.println("BORRANDO REVISTA");
-
-        magazine.delete();
-
-        // Se muestran los materiales existentes.
-        showExistencias();
-
-        // Se eliminan los CDs recién agregados.
-        System.out.println("BORRANDO CDS");
-
-        cdImagenes.delete();
-        cdOvnis.delete();
-
-        // Se muestran los materiales existentes.
-        showExistencias();
     }
 }

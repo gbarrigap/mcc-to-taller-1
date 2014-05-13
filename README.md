@@ -9,6 +9,8 @@
 un método load(T t)?, ¿delegar la carga al objeto del dominio?
 * ¿Será necesario una clase biblioteca.dao.MaterialDao para acceder a todos los
 materiales del repositorio en una llamada?
+* ¿Es necesario tener tantos constructores? ¿Sera mejor un constructor vacio
+dejando la inicializacion de valores a metodos setter?
 
 ## Descripción de la problemática
 
