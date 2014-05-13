@@ -2,15 +2,10 @@
 
 ## ToDo List
 
-* Comentar código donde corresponda
-* Eliminar código comentado (commented out)
-* Estandarizar nombres de variables
 * En biblioteca.dao.Dao, ¿es correcto el método retrieve(T t)?, ¿cambiar por
 un método load(T t)?, ¿delegar la carga al objeto del dominio?
 * ¿Será necesario una clase biblioteca.dao.MaterialDao para acceder a todos los
 materiales del repositorio en una llamada?
-* ¿Es necesario tener tantos constructores? ¿Sera mejor un constructor vacio
-dejando la inicializacion de valores a metodos setter?
 * ¿Es necesario el identificador "eid" para las copias?
 * ¿biblioteca.domain.Material.addCopia y biblioteca.domain.Material.addCopias
 deberían ser los único métodos para acceder a las copias? ¿setCopias, etc?
