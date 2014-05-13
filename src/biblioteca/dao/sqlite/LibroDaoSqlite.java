@@ -2,7 +2,7 @@ package biblioteca.dao.sqlite;
 
 import biblioteca.dao.LibroDao;
 import biblioteca.domain.Cd;
-import biblioteca.domain.Ejemplar;
+import biblioteca.domain.Copia;
 import biblioteca.domain.Libro;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -61,13 +61,14 @@ public class LibroDaoSqlite implements LibroDao {
             }
 
             // Inserta el libro.
-            String cid = b.hasCd() ? b.getCd().getCid().toString() : "NULL";
+            //String cid = b.hasCd() ? b.getCd().getCid().toString() : "NULL";
+            String cid = b.hasCd() ? b.getCd().getId().toString() : "NULL";
             insertCmd = String.format("INSERT INTO libros (mid, cid, isbn, autor) VALUES (%d, %s, '%s', '%s')", b.getMid(), cid, b.getIsbn(), b.getAutor());
             statement.executeUpdate(insertCmd);
 
             // Guarda los ejemplares del libro, si tiene.
-            if (b.hasEjemplares()) {
-                for (Ejemplar ejemplar : b.getEjemplares()) {
+            if (b.hasCopias()) {
+                for (Copia ejemplar : b.getCopias()) {
                     insertCmd = String.format("INSERT INTO ejemplares (mid, numero) VALUES (%d, %d)", b.getMid(), ejemplar.getNumero());
                     statement.executeUpdate(insertCmd);
 
@@ -109,12 +110,12 @@ public class LibroDaoSqlite implements LibroDao {
 
             // Una vez cargado el libro,
             // se cargan sus ejemplares.
-            book.setEjemplares(new ArrayList<Ejemplar>());
+            book.setCopias(new ArrayList<Copia>());
             query = String.format("SELECT numero FROM libros JOIN ejemplares USING (mid) WHERE isbn = '%s'", book.getIsbn());
             rs = statement.executeQuery(query);
             while (rs.next()) {
                 int numero = Integer.parseInt(rs.getString("numero"));
-                book.addEjemplar(new Ejemplar(numero));
+                book.addCopia(new Copia(numero));
             }
 
         } catch (SQLException err) {
@@ -145,12 +146,12 @@ public class LibroDaoSqlite implements LibroDao {
 
             // Una vez cargado el libro,
             // se cargan sus ejemplares.
-            book.setEjemplares(new ArrayList<Ejemplar>());
+            book.setCopias(new ArrayList<Copia>());
             query = String.format("SELECT numero FROM libros JOIN ejemplares USING (mid) WHERE lid = %d", lid);
             rs = statement.executeQuery(query);
             while (rs.next()) {
                 int numero = Integer.parseInt(rs.getString("numero"));
-                book.addEjemplar(new Ejemplar(numero));
+                book.addCopia(new Copia(numero));
             }
 
             // Se carga el CD asociado al libro, si existe.

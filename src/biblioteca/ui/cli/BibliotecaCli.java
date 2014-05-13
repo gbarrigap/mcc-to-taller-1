@@ -344,7 +344,7 @@ public class BibliotecaCli {
             System.out.println("Autor      : " + book.getAutor());
             System.out.println("Editorial  : " + book.getEditorial());
             System.out.println("ISBN       : " + book.getIsbn());
-            System.out.println("Ejemplares : " + book.getEjemplares().size());
+            System.out.println("Ejemplares : " + book.getCopias().size());
         }
         System.out.println("--");
     }

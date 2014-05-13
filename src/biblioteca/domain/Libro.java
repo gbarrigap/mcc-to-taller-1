@@ -29,23 +29,23 @@ public class Libro extends Material {
         this.autor = autor;
     }
 
-    public Libro(String isbn, String titulo, String autor, String editorial, List<Ejemplar> ejemplares) {
-        super(titulo, editorial, ejemplares);
+    public Libro(String isbn, String titulo, String autor, String editorial, List<Copia> copias) {
+        super(titulo, editorial, copias);
 
         this.isbn = isbn;
         this.autor = autor;
     }
 
-    public Libro(String isbn, String titulo, String autor, String editorial, List<Ejemplar> ejemplares, Cd cd) {
-        super(titulo, editorial, ejemplares);
+    public Libro(String isbn, String titulo, String autor, String editorial, List<Copia> copias, Cd cd) {
+        super(titulo, editorial, copias);
 
         this.isbn = isbn;
         this.autor = autor;
         this.cd = cd;
     }
 
-    public Libro(Integer lid, String isbn, String titulo, String autor, String editorial, List<Ejemplar> ejemplares, Cd cd) {
-        super(titulo, editorial, ejemplares);
+    public Libro(Integer lid, String isbn, String titulo, String autor, String editorial, List<Copia> copias, Cd cd) {
+        super(titulo, editorial, copias);
 
         this.lid = lid;
         this.isbn = isbn;
@@ -112,7 +112,7 @@ public class Libro extends Material {
         this.setAutor(b.getAutor());
         this.setIsbn(b.getIsbn());
         this.setCd(b.getCd());
-        this.setEjemplares(b.getEjemplares());
+        this.setCopias(b.getCopias());
         this.setIsbn(b.getIsbn());
     }
 

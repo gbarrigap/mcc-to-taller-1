@@ -1,7 +1,6 @@
 package biblioteca.domain;
 
 import biblioteca.dao.DaoFactory;
-import biblioteca.dao.RevistaDao;
 import java.util.List;
 
 /**
@@ -48,13 +47,13 @@ public class Revista extends Material {
         this.cd = cd;
     }
 
-    public Revista(String titulo, String editorial, List<Ejemplar> ejemplares, Cd cd) {
+    public Revista(String titulo, String editorial, List<Copia> ejemplares, Cd cd) {
         super(titulo, editorial, ejemplares);
 
         this.cd = cd;
     }
 
-    public Revista(Integer rid, String titulo, String editorial, List<Ejemplar> ejemplares, Cd cd) {
+    public Revista(Integer rid, String titulo, String editorial, List<Copia> ejemplares, Cd cd) {
         super(titulo, editorial, ejemplares);
 
         this.rid = rid;
@@ -108,14 +107,12 @@ public class Revista extends Material {
 
     @Override
     public void persist() {
-        RevistaDao dao = DaoFactory.getRevistaDao();
-        dao.create(this);
+        DaoFactory.getRevistaDao().create(this);
     }
 
     @Override
     public void delete() {
-        RevistaDao dao = DaoFactory.getRevistaDao();
-        dao.delete(this);
+        DaoFactory.getRevistaDao().delete(this);
     }
 
     @Override

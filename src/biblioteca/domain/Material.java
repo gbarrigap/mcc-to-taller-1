@@ -6,9 +6,9 @@ import java.util.List;
 /**
  * Representa un material de la biblioteca.
  * <p>
- * Define atributos generales que los materiales de la biblioteca poseen, y un
- * listado de ejemplares asociado a este material.
- * <p>
+ Define atributos generales que los materiales de la biblioteca poseen, y un
+ listado de copias asociado a este material.
+ <p>
  * Dado que esta es una clase abstracta, sólo presenta funcionalidad común de
  * los materiales; la funcionalidad propia de cada material se debe implementar
  * en la clase respectiva.
@@ -21,10 +21,22 @@ public abstract class Material {
      * Se usa un tipo de dato <code>Integer</code> porque puede no estar
      * definido, es decir, ser <code>null</code>.
      */
+    private Integer id;
+    /**
+     * @deprecated 
+     */
     private Integer mid;
     private String titulo;
     private String editorial;
-    private List<Ejemplar> ejemplares;
+    private List<Copia> copias;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     /**
      * Constructor vacío.
@@ -38,17 +50,17 @@ public abstract class Material {
     public Material(String titulo, String editorial) {
         this.titulo = titulo;
         this.editorial = editorial;
-        this.ejemplares = new ArrayList<>();
+        this.copias = new ArrayList<>();
     }
 
-    public Material(String titulo, String editorial, List<Ejemplar> ejemplares) {
+    public Material(String titulo, String editorial, List<Copia> copias) {
         this(titulo, editorial);
 
-        this.ejemplares = ejemplares;
+        this.copias = copias;
     }
 
-    public Material(Integer mid, String titulo, String editorial, List<Ejemplar> ejemplares) {
-        this(titulo, editorial, ejemplares);
+    public Material(Integer mid, String titulo, String editorial, List<Copia> copias) {
+        this(titulo, editorial, copias);
 
         this.mid = mid;
     }
@@ -69,72 +81,80 @@ public abstract class Material {
         this.editorial = editorial;
     }
 
+    /**
+     * @deprecated 
+     * @return 
+     */
     public Integer getMid() {
         return mid;
     }
 
+    /**
+     * @deprecated 
+     * @param mid 
+     */
     public void setMid(Integer mid) {
         this.mid = mid;
     }
 
-    public List<Ejemplar> getEjemplares() {
-        return ejemplares;
+    public List<Copia> getCopias() {
+        return copias;
     }
 
-    public void setEjemplares(List<Ejemplar> ejemplares) {
-        this.ejemplares = ejemplares;
-    }
-
-    /**
-     * Indica si este material tiene ejemplares asociados.
-     * 
-     * @return true si este ejemplar tiene materiales
-     */
-    public boolean hasEjemplares() {
-        return this.ejemplares != null && !this.ejemplares.isEmpty();
+    public void setCopias(List<Copia> copias) {
+        this.copias = copias;
     }
 
     /**
-     * Agrega un ejemplar a este material.
+     * Indica si este material tiene copias asociados.
      * 
-     * @param ejemplar El ejemplar que se agregará
+     * @return true si este material tiene copias
      */
-    public void addEjemplar(Ejemplar ejemplar) {
-        // Si no existe una lista de ejemplares,
+    public boolean hasCopias() {
+        return this.copias != null && !this.copias.isEmpty();
+    }
+
+    /**
+     * Agrega una copia a este material.
+     * 
+     * @param copia La copia que se agregará
+     */
+    public void addCopia(Copia copia) {
+        // Si no existe una lista de copias,
         // se inicializa una.
-        if (this.ejemplares == null) {
-            this.ejemplares = new ArrayList<>();
+        if (this.copias == null) {
+            this.copias = new ArrayList<>();
         }
 
-        // Se agrega el ejemplar a la lista de ejemplares,
-        // siempre y cuando no haya sido agregado antes.
-        if (!this.ejemplares.contains(ejemplar)) {
-            this.ejemplares.add(ejemplar);
+        // Se agrega la copia a la lista de copias,
+        // siempre y cuando no haya sido agregada antes.
+        if (!this.copias.contains(copia)) {
+            this.copias.add(copia);
         }
     }
     
     /**
-     * Agrega una lista de ejemplares a este material.
+     * Agrega una lista de copias a este material.
      * 
-     * @param ejemplares Lista de ejemplares
+     * @param copias Lista de copias
      */
-    public void addEjemplares(List<Ejemplar> ejemplares) {
-        this.ejemplares.addAll(ejemplares);
+    public void addCopias(List<Copia> copias) {
+        this.copias.addAll(copias);
     }
 
-    public void getEjemplar(Ejemplar ejemplar) {
+    public void getCopia(Copia copia) {
         throw new UnsupportedOperationException("Not implemented yet!");
     }
 
-    public void getEjemplar(int eid) {
+    public void getCopia(int eid) {
         throw new UnsupportedOperationException("Not implemented yet!");
     }
 
-    public void removeEjemplar(Ejemplar ejemplar) {
+    public void removeCopia(Copia copia) {
         throw new UnsupportedOperationException("Not implemented yet!");
     }
 
-    public void removeEjemplar(int eid) {
+    public void removeCopia(int eid) {
         throw new UnsupportedOperationException("Not implemented yet!");
     }
 

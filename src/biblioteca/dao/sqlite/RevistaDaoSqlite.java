@@ -2,7 +2,7 @@ package biblioteca.dao.sqlite;
 
 import biblioteca.dao.RevistaDao;
 import biblioteca.domain.Cd;
-import biblioteca.domain.Ejemplar;
+import biblioteca.domain.Copia;
 import biblioteca.domain.Revista;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -41,22 +41,23 @@ public class RevistaDaoSqlite implements RevistaDao {
             }
 
             // Inserta la revista.
-            String cid = magazine.hasCd() ? magazine.getCd().getCid().toString() : "NULL";
+            //String cid = magazine.hasCd() ? magazine.getCd().getCid().toString() : "NULL";
+            String cid = magazine.hasCd() ? magazine.getCd().getId().toString() : "NULL";
             insertCmd = String.format("INSERT INTO revistas (mid, periodicidad, cid) VALUES (%d, '%s', %s)", magazine.getMid(), magazine.getPeriodicidad(), cid);
             statement.executeUpdate(insertCmd);
 
             // Se guardan los ejemplares de la revista.
             // Guarda los ejemplares del libro, si tiene.
-            if (magazine.hasEjemplares()) {
-                for (Ejemplar ejemplar : magazine.getEjemplares()) {
-                    insertCmd = String.format("INSERT INTO ejemplares (mid, numero) VALUES (%d, %d)", magazine.getMid(), ejemplar.getNumero());
+            if (magazine.hasCopias()) {
+                for (Copia copia : magazine.getCopias()) {
+                    insertCmd = String.format("INSERT INTO ejemplares (mid, numero) VALUES (%d, %d)", magazine.getMid(), copia.getNumero());
                     statement.executeUpdate(insertCmd);
 
                     // Obtiene el identificador del ejemplar almacenado.
                     getLastKeyQuery = "SELECT max(eid) AS eid FROM ejemplares";
                     rs = statement.executeQuery(getLastKeyQuery);
                     while (rs.next()) {
-                        ejemplar.setEid(rs.getInt("eid"));
+                        copia.setEid(rs.getInt("eid"));
                     }
                 }
             }
@@ -87,7 +88,7 @@ public class RevistaDaoSqlite implements RevistaDao {
             query = String.format("SELECT numero FROM revistas JOIN ejemplares USING (mid) WHERE rid = %d", rid);
             rs = statement.executeQuery(query);
             while (rs.next()) {
-                magazine.addEjemplar(new Ejemplar(rs.getInt("numero")));
+                magazine.addCopia(new Copia(rs.getInt("numero")));
             }
             
             // Se carga el CD asociado a la revista, si existe.

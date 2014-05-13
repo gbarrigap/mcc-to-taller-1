@@ -8,6 +8,9 @@ import java.util.List;
  */
 public class Cd extends Material {
 
+    /**
+     * @deprecated 
+     */
     private Integer cid;
 
     public Cd() {
@@ -17,20 +20,28 @@ public class Cd extends Material {
         super(titulo, editorial);
     }
 
-    public Cd(String titulo, String editorial, List<Ejemplar> ejemplares) {
-        super(titulo, editorial, ejemplares);
+    public Cd(String titulo, String editorial, List<Copia> copias) {
+        super(titulo, editorial, copias);
     }
 
-    public Cd(Integer cid, String titulo, String editorial, List<Ejemplar> ejemplares) {
-        super(titulo, editorial, ejemplares);
+    public Cd(Integer cid, String titulo, String editorial, List<Copia> copias) {
+        super(titulo, editorial, copias);
 
         this.cid = cid;
     }
 
+    /**
+     * @deprecated 
+     * @return 
+     */
     public Integer getCid() {
         return cid;
     }
 
+    /**
+     * @deprecated 
+     * @param cid 
+     */
     public void setCid(Integer cid) {
         this.cid = cid;
     }

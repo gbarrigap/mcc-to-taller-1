@@ -2,7 +2,7 @@ package biblioteca.dao.sqlite;
 
 import biblioteca.dao.CdDao;
 import biblioteca.domain.Cd;
-import biblioteca.domain.Ejemplar;
+import biblioteca.domain.Copia;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class CdDaoSqlite implements CdDao {
 
-    private Connection connection;
+    private final Connection connection;
 
     public CdDaoSqlite(Connection connection) {
         this.connection = connection;
@@ -31,21 +31,39 @@ public class CdDaoSqlite implements CdDao {
             statement.executeUpdate(insertCmd);
             
             // Obtiene el identificador del material insertado.
-            String getLastKeyQuery = "SELECT max(mid) AS mid FROM materiales";
+            /*String getLastKeyQuery = "SELECT max(mid) AS mid FROM materiales";
             ResultSet rs = statement.executeQuery(getLastKeyQuery);
             while (rs.next()) {
                 cd.setMid(rs.getInt("mid"));
-            }
+            }*/
             
             // Inserta CD.
-            insertCmd = String.format("INSERT INTO cds (mid) VALUES (%s)", cd.getMid());
+            //insertCmd = String.format("INSERT INTO cds (mid) VALUES (%s)", cd.getMid());
+            insertCmd = "INSERT INTO cds (mid) VALUES ((SELECT max(mid) AS mid FROM materiales))";
             statement.executeUpdate(insertCmd);
             
             // Se obtiene el identificador del CD.
-            getLastKeyQuery = "SELECT max(cid) AS cid FROM cds";
-            rs = statement.executeQuery(getLastKeyQuery);
+            String getLastKeyQuery = "SELECT max(cid) AS cid FROM cds";
+            ResultSet rs = statement.executeQuery(getLastKeyQuery);
             while (rs.next()) {
-                cd.setCid(rs.getInt("cid"));
+                //cd.setCid(rs.getInt("cid"));
+                cd.setId(rs.getInt("cid"));
+            }
+            
+            // Se insertan las copias del CD.
+            if (cd.hasCopias()) {
+                for (Copia copia : cd.getCopias()) {
+                    //insertCmd = String.format("INSERT INTO ejemplares (mid, numero) VALUES (%d, %d)", cd.getMid(), copia.getNumero());
+                    insertCmd = String.format("INSERT INTO ejemplares (mid, numero) VALUES ((SELECT mid FROM cds WHERE cid = %d), %d)", cd.getId(), copia.getNumero());
+                    statement.executeUpdate(insertCmd);
+
+                    // Obtiene el identificador del ejemplar almacenado.
+                    getLastKeyQuery = "SELECT max(eid) AS eid FROM ejemplares";
+                    rs = statement.executeQuery(getLastKeyQuery);
+                    while (rs.next()) {
+                        copia.setEid(rs.getInt("eid"));
+                    }
+                }
             }
         } catch (SQLException err) {
             System.err.println(err.toString());
@@ -55,7 +73,8 @@ public class CdDaoSqlite implements CdDao {
     @Override
     public Cd retrieve(int cid) {
         Cd cd = new Cd();
-        cd.setCid(cid);
+        //cd.setCid(cid);
+        cd.setId(cid);
         
         try {
             Statement statement = this.connection.createStatement();
@@ -64,17 +83,17 @@ public class CdDaoSqlite implements CdDao {
             String query = String.format("SELECT mid, titulo, editorial FROM cds JOIN materiales USING (mid) WHERE cid = %d", cid);
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
-                cd.setMid(rs.getInt("mid"));
+                //cd.setMid(rs.getInt("mid"));
                 cd.setTitulo(rs.getString("titulo"));
                 cd.setEditorial(rs.getString("editorial"));
             }
             
-            // Se cargan los ejemplares del CD.
-            cd.setEjemplares(new ArrayList<Ejemplar>());
+            // Se cargan las copias del CD.
+            cd.setCopias(new ArrayList<Copia>());
             query = String.format("SELECT numero FROM cds JOIN ejemplares USING (mid) WHERE cid = %d", cid);
             rs = statement.executeQuery(query);
             while (rs.next()) {
-                cd.addEjemplar(new Ejemplar(rs.getInt("numero")));
+                cd.addCopia(new Copia(rs.getInt("numero")));
             }
             
         } catch (SQLException err) {
@@ -104,7 +123,8 @@ public class CdDaoSqlite implements CdDao {
             statement.executeUpdate(query);
 
             // Luego se elimina el CD.
-            query = String.format("DELETE FROM materiales WHERE mid = %d", cd.getMid());
+            //query = String.format("DELETE FROM materiales WHERE mid = %d", cd.getMid());
+            query = String.format("DELETE FROM materiales WHERE mid = (SELECT mid FROM cds WHERE cid = %d)", cd.getId());
             statement.executeUpdate(query);
         } catch (SQLException err) {
             System.err.println(err.toString());

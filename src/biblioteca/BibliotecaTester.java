@@ -2,7 +2,7 @@ package biblioteca;
 
 import biblioteca.dao.DaoFactory;
 import biblioteca.domain.Cd;
-import biblioteca.domain.Ejemplar;
+import biblioteca.domain.Copia;
 import biblioteca.domain.Libro;
 import biblioteca.domain.Revista;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 /**
  * Esta clase implementa métodos para demostrar la funcionalidad del programa.
- * 
+ *
  * @see BibliotecaTester.runTests
  */
 public final class BibliotecaTester {
@@ -27,7 +27,7 @@ public final class BibliotecaTester {
             System.out.println("--");
             System.out.println("Título    : " + cd.getTitulo());
             System.out.println("Editorial : " + cd.getEditorial());
-            System.out.println("Ejemplares: " + cd.getEjemplares().size());
+            System.out.println("Ejemplares: " + cd.getCopias().size());
         }
         System.out.println("--");
     }
@@ -35,8 +35,8 @@ public final class BibliotecaTester {
     /**
      * Muestra los libros existentes y un conteo del total.
      * <p>
-     * Por cada libro muestra los datos relevantes; en caso de tener asociado
-     * un CD muestra los datos correspondientes con sangría apropropiada.
+     * Por cada libro muestra los datos relevantes; en caso de tener asociado un
+     * CD muestra los datos correspondientes con sangría apropropiada.
      */
     private static void showLibros() {
         List<Libro> libros = DaoFactory.getLibroDao().retrieveAll();
@@ -48,7 +48,7 @@ public final class BibliotecaTester {
             System.out.println("Autor     : " + libro.getAutor());
             System.out.println("Editorial : " + libro.getEditorial());
             System.out.println("ISBN      : " + libro.getIsbn());
-            System.out.println("Ejemplares: " + libro.getEjemplares().size());
+            System.out.println("Ejemplares: " + libro.getCopias().size());
 
             if (libro.hasCd()) {
                 System.out.println("--");
@@ -75,7 +75,7 @@ public final class BibliotecaTester {
             System.out.println("Título       : " + revista.getTitulo());
             System.out.println("Editorial    : " + revista.getEditorial());
             System.out.println("Periodicidad : " + revista.getPeriodicidad());
-            System.out.println("Ejemplares   : " + (revista.hasEjemplares() ? revista.getEjemplares().size() : "0"));
+            System.out.println("Ejemplares   : " + (revista.hasCopias() ? revista.getCopias().size() : "0"));
 
             if (revista.hasCd()) {
                 System.out.println("--");
@@ -89,7 +89,7 @@ public final class BibliotecaTester {
 
     /**
      * Muestra los materiales existentes y un conteo parcial del total.
-     * 
+     *
      * @see biblioteca.BibliotecaTester.showCds
      * @see biblioteca.BibliotecaTester.showLibros
      * @see biblioteca.BibliotecaTester.showRevistas
@@ -107,28 +107,28 @@ public final class BibliotecaTester {
      * Realiza operaciones para demostrar la funcionalidad del programa,
      * agregando, asociando y eliminando materiales, de acuerdo a las
      * restricciones propuestas, de la siguiente forma:
-     * 
+     *
      * <ol>
-     * <li>Muestra el estado actual de las existencias, contabilizando
-     * cada tipo de material junto al encabezado.
-     * 
-     * <li>Agrega CDs y muestra nuevamente las existencias para ver los
-     * cambios; es decir, la presencia de dos nuevos CD.
-     * 
+     * <li>Muestra el estado actual de las existencias, contabilizando cada tipo
+     * de material junto al encabezado.
+     *
+     * <li>Agrega CDs y muestra nuevamente las existencias para ver los cambios;
+     * es decir, la presencia de dos nuevos CD.
+     *
      * <li>Agrega un libro y le asocia un CD, previamente agregado, y muestra
      * las existencias para ver los cambios; un nuevo libro con un CD asociado.
      * Lo anterior sólo modifica el total de libros, no el de CDs.
-     * 
+     *
      * <li>Agrega una revista y le asocia un CD, previamente agregado, y muestra
      * las existencias para ver los cambios; una nueva revista con un CD
      * asociado. Lo anterior sólo modifica el total de revistas, no el de CDs.
-     * 
-     * <li>Elimina uno a uno los materiales agregados, y muestra los cambios
-     * por cada operación. Primero se elimina la revista y se muestran las
+     *
+     * <li>Elimina uno a uno los materiales agregados, y muestra los cambios por
+     * cada operación. Primero se elimina la revista y se muestran las
      * existencias; luego se elimina el libro y se muestran las existencias;
      * finalmente se elimina el CD y se muestran las existencias.
      * </ol>
-     * 
+     *
      * <p>
      * Una vez ejecutado este método, las existencias se encuentran como antes
      * de su ejecución.
@@ -137,89 +137,89 @@ public final class BibliotecaTester {
         try {
             // Se muestran todos los materiales existentes.
             showExistencias();
-            
+
             // Se agregan CDs.
             System.out.println("AGREGANDO CDS");
-            
+
             Cd cdImagenes = new Cd("Imágenes de La ciudad y de los perros", "Alfaguara Digital");
             Cd cdOvnis = new Cd("Imágenes de avistamientos de ovnis", "Televisa S.A.");
-            
+
             // Se agregan ejemplares de los CDs.
             for (int i = 0; i < 4; i++) {
-                cdImagenes.addEjemplar(new Ejemplar(i));
+                cdImagenes.addCopia(new Copia(i));
             }
-            
+
             for (int i = 0; i < 4; i++) {
-                cdOvnis.addEjemplar(new Ejemplar(i));
+                cdOvnis.addCopia(new Copia(i));
             }
-            
+
             // Se guardan los CDs.
             cdImagenes.persist();
             cdOvnis.persist();
-            
+
             // Se muestran los materiales existentes.
             showExistencias();
-            
+
             // Se agrega un libro.
             System.out.println("AGREGANDO LIBRO");
-            
+
             Libro book = new Libro("978-84-204-1233-7", "La ciudad y los perros", "Mario Vargas Llosa", "Alfaguara");
-            
+
             // Se agregan ejemplares del libro.
             for (int i = 1; i < 5; i++) {
-                book.addEjemplar(new Ejemplar(i));
+                book.addCopia(new Copia(i));
             }
-            
+
             // Se asocia un CD asociado al libro.
             book.setCd(cdImagenes);
-            
+
             // Se guarda el libro.
             book.persist();
-            
+
             // Se muestran nuevamente los materiales existentes.
             showExistencias();
-            
+
             // Se agrega una revista.
             System.out.println("AGREGANDO REVISTA");
-            
+
             Revista magazine = new Revista("Conozca Más", "Televisa S.A.", "Mensual");
-            
+
             // Se agregan ejemplares de la revista.
             for (int i = 1; i < 3; i++) {
-                magazine.addEjemplar(new Ejemplar(i));
+                magazine.addCopia(new Copia(i));
             }
-            
+
             // Se asocia un CD a la revista.
             magazine.setCd(cdOvnis);
-            
+
             // Se guarda la revista.
             magazine.persist();
-            
+
             // Se muestran los materiales existentes.
             showExistencias();
-            
+
             // Se elimina el libro recién agregado.
             System.out.println("BORRANDO LIBRO");
-            
+
             book.delete();
-            
+
             // Se muestran los materiales existentes.
             showExistencias();
-            
+
             // Se elimina la revista recién agregada.
             System.out.println("BORRANDO REVISTA");
-            
+
             magazine.delete();
-            
+
             // Se muestran los materiales existentes.
             showExistencias();
-            
+
             // Se eliminan los CDs recién agregados.
             System.out.println("BORRANDO CDS");
-            
+
             cdImagenes.delete();
             cdOvnis.delete();
-            
+
             // Se muestran los materiales existentes.
             showExistencias();
         } catch (Revista.PeriodicidadInvalidaException ex) {

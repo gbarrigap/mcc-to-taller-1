@@ -1,15 +1,15 @@
 package biblioteca.domain;
 
-public class Ejemplar {
+public class Copia {
 
     private Integer eid;
     private int numero;
 
-    public Ejemplar(int numero) {
+    public Copia(int numero) {
         this.numero = numero;
     }
 
-    public Ejemplar() {
+    public Copia() {
     }
 
     public Integer getEid() {
