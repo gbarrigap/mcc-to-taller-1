@@ -1,7 +1,6 @@
 package biblioteca.domain;
 
 import biblioteca.dao.DaoFactory;
-import java.util.List;
 
 /**
  * Representa un libro de la biblioteca.
@@ -11,31 +10,6 @@ public class Libro extends Material {
     private String isbn;
     private String autor;
     private Cd cd;
-
-    public Libro() {
-    }
-
-    public Libro(String isbn, String titulo, String autor, String editorial) {
-        super(titulo, editorial);
-
-        this.isbn = isbn;
-        this.autor = autor;
-    }
-
-    public Libro(String isbn, String titulo, String autor, String editorial, List<Copia> copias) {
-        super(titulo, editorial, copias);
-
-        this.isbn = isbn;
-        this.autor = autor;
-    }
-
-    public Libro(String isbn, String titulo, String autor, String editorial, List<Copia> copias, Cd cd) {
-        super(titulo, editorial, copias);
-
-        this.isbn = isbn;
-        this.autor = autor;
-        this.cd = cd;
-    }
 
     public String getIsbn() {
         return isbn;

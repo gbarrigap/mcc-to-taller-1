@@ -1,7 +1,6 @@
 package biblioteca.domain;
 
 import biblioteca.dao.DaoFactory;
-import java.util.List;
 
 /**
  * Representa una revista de la biblioteca.
@@ -44,32 +43,6 @@ public class Revista extends Material {
 
     private Periodicidad periodicidad;
     private Cd cd;
-
-    public Revista() {
-
-    }
-
-    public Revista(String titulo, String editorial) {
-        super(titulo, editorial);
-    }
-
-    public Revista(String titulo, String editorial, String periodicidad) throws PeriodicidadInvalidaException {
-        super(titulo, editorial);
-
-        this.setPeriodicidad(periodicidad);
-    }
-
-    public Revista(String titulo, String editorial, Cd cd) {
-        super(titulo, editorial);
-
-        this.cd = cd;
-    }
-
-    public Revista(String titulo, String editorial, List<Copia> ejemplares, Cd cd) {
-        super(titulo, editorial, ejemplares);
-
-        this.cd = cd;
-    }
 
     /**
      * @return Periodicidad la frecuencia de publicación de esta revista

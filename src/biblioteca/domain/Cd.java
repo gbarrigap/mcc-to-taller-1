@@ -1,23 +1,11 @@
 package biblioteca.domain;
 
 import biblioteca.dao.DaoFactory;
-import java.util.List;
 
 /**
  * Representa un CD de la biblioteca.
  */
 public class Cd extends Material {
-
-    public Cd() {
-    }
-
-    public Cd(String titulo, String editorial) {
-        super(titulo, editorial);
-    }
-
-    public Cd(String titulo, String editorial, List<Copia> copias) {
-        super(titulo, editorial, copias);
-    }
 
     @Override
     public void persist() {

@@ -4,6 +4,7 @@ import biblioteca.dao.DaoFactory;
 import biblioteca.dao.RevistaDao;
 import biblioteca.domain.Copia;
 import biblioteca.domain.Revista;
+import biblioteca.domain.Revista.PeriodicidadInvalidaException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -94,7 +95,7 @@ public class RevistaDaoSqlite implements RevistaDao {
             while (rs.next()) {
                 revista.setCd(DaoFactory.getCdDao().retrieve(rs.getInt("cid")));
             }
-        } catch (SQLException | Revista.PeriodicidadInvalidaException ex) {
+        } catch (SQLException | PeriodicidadInvalidaException ex) {
             Logger.getLogger(RevistaDaoSqlite.class.getName()).log(Level.SEVERE, null, ex);
         }
 

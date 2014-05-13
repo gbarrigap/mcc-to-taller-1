@@ -34,27 +34,6 @@ public abstract class Material {
         this.id = id;
     }
 
-    /**
-     * Constructor vacío.
-     * <p>
-     * El constructor permite que se cree una instancia sin parámetro alguno,
-     * para luego inicializar los atributos cuando fuere necesario.
-     */
-    public Material() {
-    }
-
-    public Material(String titulo, String editorial) {
-        this.titulo = titulo;
-        this.editorial = editorial;
-        this.copias = new ArrayList<>();
-    }
-
-    public Material(String titulo, String editorial, List<Copia> copias) {
-        this(titulo, editorial);
-
-        this.copias = copias;
-    }
-
     public String getTitulo() {
         return titulo;
     }

@@ -6,8 +6,6 @@ import biblioteca.domain.Copia;
 import biblioteca.domain.Libro;
 import biblioteca.domain.Revista;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Esta clase implementa métodos para demostrar la funcionalidad del programa.
@@ -140,8 +138,13 @@ public final class BibliotecaTester {
         // Se agregan CDs.
         System.out.println("AGREGANDO CDS");
 
-        Cd cdImagenes = new Cd("Imágenes de La ciudad y de los perros", "Alfaguara Digital");
-        Cd cdOvnis = new Cd("Imágenes de avistamientos de ovnis", "Televisa S.A.");
+        Cd cdImagenes = new Cd();
+        cdImagenes.setTitulo("Imágenes de la ciudad y de los perros");
+        cdImagenes.setEditorial("Alfaguara Digital");
+
+        Cd cdOvnis = new Cd();
+        cdOvnis.setTitulo("Imágenes de avistamientos de ovnis");
+        cdOvnis.setEditorial("Televisa S.A.");
 
         // Se agregan ejemplares de los CDs.
         for (int i = 0; i < 4; i++) {
@@ -162,7 +165,11 @@ public final class BibliotecaTester {
         // Se agrega un libro.
         System.out.println("AGREGANDO LIBRO");
 
-        Libro libro = new Libro("978-84-204-1233-7", "La ciudad y los perros", "Mario Vargas Llosa", "Alfaguara");
+        Libro libro = new Libro();
+        libro.setIsbn("978-84-204-1233-7");
+        libro.setTitulo("La ciudad y los perros");
+        libro.setAutor("Mario Vargas Llosa");
+        libro.setEditorial("Alfaguara");
 
         // Se agregan ejemplares del libro.
         for (int i = 1; i < 5; i++) {
@@ -181,7 +188,9 @@ public final class BibliotecaTester {
         // Se agrega una revista.
         System.out.println("AGREGANDO REVISTA");
 
-        Revista revista = new Revista("Conozca Más", "Televisa S.A.");
+        Revista revista = new Revista();
+        revista.setTitulo("Conozca Más");
+        revista.setEditorial("Televisa S.A.");
         revista.setPeriodicidad(Revista.Periodicidad.MENSUAL);
 
         // Se agregan ejemplares de la revista.

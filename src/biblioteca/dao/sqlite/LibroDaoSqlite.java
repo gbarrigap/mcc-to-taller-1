@@ -57,7 +57,7 @@ public class LibroDaoSqlite implements LibroDao {
 
             // Se inserta el libro.
             String cid = libro.hasCd() ? libro.getCd().getId().toString() : "NULL";
-            insertCmd = String.format("INSERT INTO libros (mid, cid, isbn, autor) VALUES ((SELECT max(mid) AS mid FROM materiales), %s, '%s', '%s')", cid, libro.getIsbn(), libro.getAutor());
+            insertCmd = String.format("INSERT INTO libros (mid, cid, isbn, autor) VALUES ((SELECT max(mid) FROM materiales), %s, '%s', '%s')", cid, libro.getIsbn(), libro.getAutor());
             statement.executeUpdate(insertCmd);
 
             // Se obtiene el identificador del libro insertado.
@@ -113,6 +113,8 @@ public class LibroDaoSqlite implements LibroDao {
 
             // Se carga el CD asociado al libro, si existe.
             // @todo Revisar consulta SQL; ¿es optimizable?
+            //query = String.format("SELECT cid FROM materiales JOIN cds USING (mid) WHERE cid = (SELECT cid FROM libros WHERE lid = %d)), id);
+            //query = String.format("SELECT cid FROM materiales JOIN (cds JOIN libros USING (cid)) USING (mid) WHERE lid = %d", id);
             query = String.format("SELECT cid FROM materiales JOIN (SELECT cds.* FROM libros JOIN cds USING (cid) WHERE lid = %d) USING (mid)", id);
             rs = statement.executeQuery(query);
             while (rs.next()) {
