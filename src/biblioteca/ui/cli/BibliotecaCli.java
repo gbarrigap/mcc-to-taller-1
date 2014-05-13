@@ -48,14 +48,14 @@ public class BibliotecaCli {
 
     private static void agregarLibro() {
         boolean error;
-        Libro book = new Libro();
+        Libro libro = new Libro();
 
         do {
             error = false;
             System.out.print("ISBN: ");
             try {
                 //book.setIsbn(Integer.parseInt(in.readLine()));
-                book.setIsbn(in.readLine());
+                libro.setIsbn(in.readLine());
             } catch (Exception err) {
                 error = true;
                 System.err.println(err.toString());
@@ -66,7 +66,7 @@ public class BibliotecaCli {
             error = false;
             System.out.print("Título: ");
             try {
-                book.setTitulo(in.readLine());
+                libro.setTitulo(in.readLine());
             } catch (Exception err) {
                 error = true;
                 System.err.println(err.toString());
@@ -77,7 +77,7 @@ public class BibliotecaCli {
             error = false;
             System.out.print("Autor: ");
             try {
-                book.setAutor(in.readLine());
+                libro.setAutor(in.readLine());
             } catch (Exception err) {
                 error = true;
                 System.err.println(err.toString());
@@ -88,7 +88,7 @@ public class BibliotecaCli {
             error = false;
             System.out.print("Editorial: ");
             try {
-                book.setEditorial(in.readLine());
+                libro.setEditorial(in.readLine());
             } catch (Exception err) {
                 error = true;
                 System.err.println(err.toString());
@@ -103,14 +103,14 @@ public class BibliotecaCli {
                     System.out.print("CD ID: ");
                     
                     CdDao dao = DaoFactory.getCdDao();
-                    book.setCd(dao.retrieve(Integer.parseInt(in.readLine())));
+                    libro.setCd(dao.retrieve(Integer.parseInt(in.readLine())));
                 }
             } catch (IOException err) {
                 System.err.println(err.toString());
             }
         } while (error);
 
-        book.persist();
+        libro.persist();
     }
 
     private static void agregarRevista() {
@@ -338,13 +338,13 @@ public class BibliotecaCli {
         List<Libro> books = dao.retrieveAll();
 
         System.out.println("**** LIBROS *****");
-        for (Libro book : books) {
+        for (Libro libro : books) {
             System.out.println("--");
-            System.out.println("Título     : " + book.getTitulo());
-            System.out.println("Autor      : " + book.getAutor());
-            System.out.println("Editorial  : " + book.getEditorial());
-            System.out.println("ISBN       : " + book.getIsbn());
-            System.out.println("Ejemplares : " + book.getCopias().size());
+            System.out.println("Título     : " + libro.getTitulo());
+            System.out.println("Autor      : " + libro.getAutor());
+            System.out.println("Editorial  : " + libro.getEditorial());
+            System.out.println("ISBN       : " + libro.getIsbn());
+            System.out.println("Ejemplares : " + libro.getCopias().size());
         }
         System.out.println("--");
     }

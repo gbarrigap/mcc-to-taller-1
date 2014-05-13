@@ -13,6 +13,7 @@ public class Libro extends Material {
      * <p>
      * Se usa un tipo de dato <code>Integer</code> porque puede no estar
      * definido, es decir, ser <code>null</code>.
+     * @deprecated 
      */
     private Integer lid;
     private String isbn;
@@ -44,6 +45,16 @@ public class Libro extends Material {
         this.cd = cd;
     }
 
+    /**
+     * @deprecated 
+     * @param lid
+     * @param isbn
+     * @param titulo
+     * @param autor
+     * @param editorial
+     * @param copias
+     * @param cd 
+     */
     public Libro(Integer lid, String isbn, String titulo, String autor, String editorial, List<Copia> copias, Cd cd) {
         super(titulo, editorial, copias);
 
@@ -53,10 +64,18 @@ public class Libro extends Material {
         this.cd = cd;
     }
 
+    /**
+     * @deprecated 
+     * @return 
+     */
     public Integer getLid() {
         return lid;
     }
 
+    /**
+     * @deprecated 
+     * @param lid 
+     */
     public void setLid(Integer lid) {
         this.lid = lid;
     }
@@ -105,15 +124,15 @@ public class Libro extends Material {
 
     @Override
     public void load() {
-        Libro b = DaoFactory.getLibroDao().retrieve(this);
+        Libro libro = DaoFactory.getLibroDao().retrieve(this);
 
-        this.setTitulo(b.getTitulo());
-        this.setEditorial(b.getEditorial());
-        this.setAutor(b.getAutor());
-        this.setIsbn(b.getIsbn());
-        this.setCd(b.getCd());
-        this.setCopias(b.getCopias());
-        this.setIsbn(b.getIsbn());
+        this.setTitulo(libro.getTitulo());
+        this.setEditorial(libro.getEditorial());
+        this.setAutor(libro.getAutor());
+        this.setIsbn(libro.getIsbn());
+        this.setCd(libro.getCd());
+        this.setCopias(libro.getCopias());
+        this.setIsbn(libro.getIsbn());
     }
 
 }

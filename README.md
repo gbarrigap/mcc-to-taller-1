@@ -11,6 +11,9 @@ un método load(T t)?, ¿delegar la carga al objeto del dominio?
 materiales del repositorio en una llamada?
 * ¿Es necesario tener tantos constructores? ¿Sera mejor un constructor vacio
 dejando la inicializacion de valores a metodos setter?
+* ¿Es necesario el identificador "eid" para las copias?
+* ¿biblioteca.domain.Material.addCopia y biblioteca.domain.Material.addCopias
+deberían ser los único métodos para acceder a las copias? ¿setCopias, etc?
 
 ## Descripción de la problemática
 

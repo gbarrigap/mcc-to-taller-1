@@ -15,13 +15,39 @@ public class Revista extends Material {
      * 
      * @see biblioteca.domain.Revista.PeriodicidadInvalidaException
      */
-    public enum Periodicidad { Mensual, Quincenal, Semanal };
+    public enum Periodicidades { Mensual, Quincenal, Semanal };
+    public enum Periodicidad {
+        MENSUAL,
+        QUINCENAL,
+        SEMANAL;
+        
+        /**
+         * @return Una representación estandarizada de esta periodicidad.
+         */
+        @Override
+        public String toString() {
+            String value = null;
+            switch (this) {
+                case MENSUAL:
+                    value = "Mensual";
+                    break;
+                case QUINCENAL:
+                    value = "Quincenal";
+                    break;
+                case SEMANAL:
+                    value = "Semanal";
+                    break;
+            }
+            return value;
+        }
+    }
 
     /**
      * Identificador de esta revista.
      * <p>
      * Se usa un tipo de dato <code>Integer</code> porque puede no estar
      * definido, es decir, ser <code>null</code>.
+     * @deprecated 
      */
     private Integer rid;
     private Periodicidad periodicidad;
@@ -60,10 +86,18 @@ public class Revista extends Material {
         this.cd = cd;
     }
 
+    /**
+     * @deprecated 
+     * @return 
+     */
     public Integer getRid() {
         return rid;
     }
 
+    /**
+     * @deprecated 
+     * @param rid 
+     */
     public void setRid(Integer rid) {
         this.rid = rid;
     }
@@ -83,7 +117,7 @@ public class Revista extends Material {
      */
     public final void setPeriodicidad(String periodicidad) throws PeriodicidadInvalidaException {
         try {
-            this.periodicidad = Periodicidad.valueOf(periodicidad);
+            this.periodicidad = Periodicidad.valueOf(periodicidad.toUpperCase());
         } catch (Exception err) {
             throw new PeriodicidadInvalidaException(err.toString());
         }

@@ -1,7 +1,7 @@
 package biblioteca.dao.sqlite;
 
+import biblioteca.dao.DaoFactory;
 import biblioteca.dao.RevistaDao;
-import biblioteca.domain.Cd;
 import biblioteca.domain.Copia;
 import biblioteca.domain.Revista;
 import java.sql.Connection;
@@ -18,42 +18,49 @@ import java.util.logging.Logger;
  */
 public class RevistaDaoSqlite implements RevistaDao {
 
-    private Connection connection;
+    private final Connection connection;
 
     public RevistaDaoSqlite(Connection connection) {
         this.connection = connection;
     }
 
     @Override
-    public void create(Revista magazine) {
+    public void create(Revista revista) {
         try {
             Statement statement = this.connection.createStatement();
 
             // Inserta el material.
-            String insertCmd = String.format("INSERT INTO materiales (titulo, editorial) VALUES ('%s', '%s')", magazine.getTitulo(), magazine.getEditorial());
+            String insertCmd = String.format("INSERT INTO materiales (titulo, editorial) VALUES ('%s', '%s')", revista.getTitulo(), revista.getEditorial());
             statement.executeUpdate(insertCmd);
 
-            // Obtiene el identificador del material insertado.
+            /*// Obtiene el identificador del material insertado.
             String getLastKeyQuery = "SELECT max(mid) AS mid FROM materiales";
             ResultSet rs = statement.executeQuery(getLastKeyQuery);
             while (rs.next()) {
                 magazine.setMid(Integer.parseInt(rs.getString("mid")));
+            }*/
+
+            // Se inserta la revista.
+            //String cid = magazine.hasCd() ? magazine.getCd().getCid().toString() : "NULL";
+            String cid = revista.hasCd() ? revista.getCd().getId().toString() : "NULL";
+            //insertCmd = String.format("INSERT INTO revistas (mid, periodicidad, cid) VALUES (%d, '%s', %s)", magazine.getMid(), magazine.getPeriodicidad(), cid);
+            insertCmd = String.format("INSERT INTO revistas (mid, periodicidad, cid) VALUES ((SELECT max(mid) FROM materiales), '%s', %s)", revista.getPeriodicidad(), cid);
+            statement.executeUpdate(insertCmd);
+            
+            // Se obtiene el identificador de la revista.
+            String getLastKeyQuery = "SELECT max(rid) AS rid FROM revistas";
+            ResultSet rs = statement.executeQuery(getLastKeyQuery);
+            while (rs.next()) {
+                revista.setId(rs.getInt("rid"));
             }
 
-            // Inserta la revista.
-            //String cid = magazine.hasCd() ? magazine.getCd().getCid().toString() : "NULL";
-            String cid = magazine.hasCd() ? magazine.getCd().getId().toString() : "NULL";
-            insertCmd = String.format("INSERT INTO revistas (mid, periodicidad, cid) VALUES (%d, '%s', %s)", magazine.getMid(), magazine.getPeriodicidad(), cid);
-            statement.executeUpdate(insertCmd);
-
-            // Se guardan los ejemplares de la revista.
-            // Guarda los ejemplares del libro, si tiene.
-            if (magazine.hasCopias()) {
-                for (Copia copia : magazine.getCopias()) {
-                    insertCmd = String.format("INSERT INTO ejemplares (mid, numero) VALUES (%d, %d)", magazine.getMid(), copia.getNumero());
+            // Si esta revista tiene copias, se guardan.
+            if (revista.hasCopias()) {
+                for (Copia copia : revista.getCopias()) {
+                    insertCmd = String.format("INSERT INTO ejemplares (mid, numero) VALUES ((SELECT mid FROM revistas WHERE rid = %d), %d)", revista.getId(), copia.getNumero());
                     statement.executeUpdate(insertCmd);
 
-                    // Obtiene el identificador del ejemplar almacenado.
+                    // Se obtiene el identificador de la copia almacenada.
                     getLastKeyQuery = "SELECT max(eid) AS eid FROM ejemplares";
                     rs = statement.executeQuery(getLastKeyQuery);
                     while (rs.next()) {
@@ -68,41 +75,43 @@ public class RevistaDaoSqlite implements RevistaDao {
 
     @Override
     public Revista retrieve(int rid) {
-        Revista magazine = new Revista();
-        magazine.setRid(rid);
+        Revista revista = new Revista();
+        //magazine.setRid(rid);
+        revista.setId(rid);
 
         try {
             Statement statement = this.connection.createStatement();
 
-            // Primero se cargan los datos de la revista.
+            // Se cargan los datos de la revista.
             String query = String.format("SELECT mid, titulo, editorial, periodicidad FROM revistas JOIN materiales USING (mid) WHERE rid = %d", rid);
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
-                magazine.setMid(rs.getInt("mid"));
-                magazine.setTitulo(rs.getString("titulo"));
-                magazine.setEditorial(rs.getString("editorial"));
-                magazine.setPeriodicidad(rs.getString("periodicidad"));
+                //magazine.setMid(rs.getInt("mid"));
+                revista.setTitulo(rs.getString("titulo"));
+                revista.setEditorial(rs.getString("editorial"));
+                revista.setPeriodicidad(rs.getString("periodicidad"));
             }
             
             // Se cargan los ejemplares de la revista, si tiene.
             query = String.format("SELECT numero FROM revistas JOIN ejemplares USING (mid) WHERE rid = %d", rid);
             rs = statement.executeQuery(query);
             while (rs.next()) {
-                magazine.addCopia(new Copia(rs.getInt("numero")));
+                revista.addCopia(new Copia(rs.getInt("numero")));
             }
             
             // Se carga el CD asociado a la revista, si existe.
             // @todo Usar método "retrieve" del CD para cargar datos y ejemplares.
+            // @todo Limpiar SELECT.
             query = String.format("SELECT cid, mid, titulo, editorial FROM materiales JOIN (SELECT cds.* FROM revistas JOIN cds USING (cid) WHERE rid = %d) USING (mid)", rid);
             rs = statement.executeQuery(query);
             while (rs.next()) {
-                Cd cd = new Cd();
+                /*Cd cd = new Cd();
                 cd.setCid(rs.getInt("cid"));
                 cd.setMid(rs.getInt("mid"));
                 cd.setTitulo(rs.getString("titulo"));
                 cd.setEditorial(rs.getString("editorial"));
-
-                magazine.setCd(cd);
+                magazine.setCd(cd);*/
+                revista.setCd(DaoFactory.getCdDao().retrieve(rs.getInt("cid")));
             }
         } catch (SQLException err) {
             System.err.println(err.toString());
@@ -110,7 +119,7 @@ public class RevistaDaoSqlite implements RevistaDao {
             Logger.getLogger(RevistaDaoSqlite.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return magazine;
+        return revista;
     }
 
     @Override
@@ -124,7 +133,7 @@ public class RevistaDaoSqlite implements RevistaDao {
     }
 
     @Override
-    public void delete(Revista magazine) {
+    public void delete(Revista revista) {
         try {
             // Se fuerza a la base de datos a reconocer las claves foráneas,
             // para eliminar las dependencias en cascada.
@@ -133,7 +142,8 @@ public class RevistaDaoSqlite implements RevistaDao {
             statement.executeUpdate(query);
 
             // Luego se elimina la revista.
-            query = String.format("DELETE FROM materiales WHERE mid = %d", magazine.getMid());
+            //query = String.format("DELETE FROM materiales WHERE mid = %d", magazine.getMid());
+            query = String.format("DELETE FROM materiales WHERE mid = (SELECT mid FROM revistas WHERE rid = %d)", revista.getId());
             statement.executeUpdate(query);
         } catch (SQLException err) {
             System.err.println(err.toString());
