@@ -6,9 +6,9 @@ import java.util.List;
 /**
  * Representa un material de la biblioteca.
  * <p>
- Define atributos generales que los materiales de la biblioteca poseen, y un
- listado de copias asociado a este material.
- <p>
+ * Define atributos generales que los materiales de la biblioteca poseen, y un
+ * listado de copias asociado a este material.
+ * <p>
  * Dado que esta es una clase abstracta, sólo presenta funcionalidad común de
  * los materiales; la funcionalidad propia de cada material se debe implementar
  * en la clase respectiva.
@@ -22,10 +22,6 @@ public abstract class Material {
      * definido, es decir, ser <code>null</code>.
      */
     private Integer id;
-    /**
-     * @deprecated 
-     */
-    private Integer mid;
     private String titulo;
     private String editorial;
     private List<Copia> copias;
@@ -59,12 +55,6 @@ public abstract class Material {
         this.copias = copias;
     }
 
-    public Material(Integer mid, String titulo, String editorial, List<Copia> copias) {
-        this(titulo, editorial, copias);
-
-        this.mid = mid;
-    }
-
     public String getTitulo() {
         return titulo;
     }
@@ -81,24 +71,8 @@ public abstract class Material {
         this.editorial = editorial;
     }
 
-    /**
-     * @deprecated 
-     * @return 
-     */
-    public Integer getMid() {
-        return mid;
-    }
-
-    /**
-     * @deprecated 
-     * @param mid 
-     */
-    public void setMid(Integer mid) {
-        this.mid = mid;
-    }
-
     public List<Copia> getCopias() {
-        return copias;
+        return this.copias;
     }
 
     public void setCopias(List<Copia> copias) {
@@ -107,7 +81,7 @@ public abstract class Material {
 
     /**
      * Indica si este material tiene copias asociados.
-     * 
+     *
      * @return true si este material tiene copias
      */
     public boolean hasCopias() {
@@ -116,7 +90,7 @@ public abstract class Material {
 
     /**
      * Agrega una copia a este material.
-     * 
+     *
      * @param copia La copia que se agregará
      */
     public void addCopia(Copia copia) {
@@ -132,13 +106,20 @@ public abstract class Material {
             this.copias.add(copia);
         }
     }
-    
+
     /**
      * Agrega una lista de copias a este material.
-     * 
+     *
      * @param copias Lista de copias
      */
     public void addCopias(List<Copia> copias) {
+        // Si no está inicializada la lista de copias de este material,
+        // se crea una nueva.
+        if (this.copias == null) {
+            this.copias = new ArrayList<>();
+        }
+
+        // Se agrega la lista de nuevas copias de este material.
         this.copias.addAll(copias);
     }
 

@@ -102,11 +102,6 @@ public class RevistaDaoSqlite implements RevistaDao {
     }
 
     @Override
-    public Revista retrieve(Revista t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public void update(Revista t) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

@@ -86,15 +86,6 @@ public class LibroDaoSqlite implements LibroDao {
         }
     }
 
-    /**
-     * @param libro el libro con su atributo identificador definido.
-     * @return
-     */
-    @Override
-    public Libro retrieve(Libro libro) {
-        return this.retrieve(libro.getId());
-    }
-
     @Override
     public Libro retrieve(int id) {
         Libro libro = new Libro();

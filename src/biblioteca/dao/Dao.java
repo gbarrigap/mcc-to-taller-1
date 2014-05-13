@@ -18,8 +18,8 @@ import java.util.List;
  * <code>getByIsbn(String isbn)</code>, propio de los libros. Luego, la
  * implementación de estas interfaces se encargará de acceder a los datos,
  * siendo este acceso transparente al usuario de las interfaces, mediante una
- * fábrica. Por ejemplo, para persistir un libro en una base de datos Sqlite,
- * la fábrica implementará el método <code>getCdDao()</code>, que retornará una
+ * fábrica. Por ejemplo, para persistir un libro en una base de datos Sqlite, la
+ * fábrica implementará el método <code>getCdDao()</code>, que retornará una
  * instancia de la clase <code>CdDaoSqlite</code> que implementará la interfaz
  * <code>CdDao</code>, por lo que el usuario sólo tendrá que crear una instancia
  * del tipo <code>CdDao</code> para acceder a sus métodos. Lo anterior se puede
@@ -54,47 +54,45 @@ import java.util.List;
  *  ...
  *  cd.persist();
  * </pre>
+ *
+ * @param <T>
  */
 public interface Dao<T> {
 
     /**
      * Crea un material en el repositorio.
-     * 
+     *
      * @param t El material que se creará
      */
     public void create(T t);
 
     /**
      * Obtiene un material del repositorio usando un identificador.
+     *
      * @param id El identificador del material
      * @return El material con el identificador recibido
      */
     public T retrieve(int id);
 
     /**
-     * Carga los datos de un material cuyo identificador es conocido.
-     * @param t El material que se cargará
-     * @return El material cargado
-     * @deprecated 
-     */
-    public T retrieve(T t);
-
-    /**
      * Actualiza en el repositorio los datos del material recibido.
+     *
      * @param t El material recibido
      */
     public void update(T t);
 
     /**
      * Elimina del repositorio el material recibido.
+     *
      * @param t El material recibido
      */
     public void delete(T t);
 
     /**
      * Obtiene una lista con todos los materiales del repositorio.
-     * 
+     *
      * @return una lista con materiales.
      */
     public List<T> retrieveAll();
+
 }

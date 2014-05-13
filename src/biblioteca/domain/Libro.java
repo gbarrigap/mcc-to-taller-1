@@ -8,14 +8,6 @@ import java.util.List;
  */
 public class Libro extends Material {
 
-    /**
-     * Identificador de este libro.
-     * <p>
-     * Se usa un tipo de dato <code>Integer</code> porque puede no estar
-     * definido, es decir, ser <code>null</code>.
-     * @deprecated 
-     */
-    private Integer lid;
     private String isbn;
     private String autor;
     private Cd cd;
@@ -45,41 +37,6 @@ public class Libro extends Material {
         this.cd = cd;
     }
 
-    /**
-     * @deprecated 
-     * @param lid
-     * @param isbn
-     * @param titulo
-     * @param autor
-     * @param editorial
-     * @param copias
-     * @param cd 
-     */
-    public Libro(Integer lid, String isbn, String titulo, String autor, String editorial, List<Copia> copias, Cd cd) {
-        super(titulo, editorial, copias);
-
-        this.lid = lid;
-        this.isbn = isbn;
-        this.autor = autor;
-        this.cd = cd;
-    }
-
-    /**
-     * @deprecated 
-     * @return 
-     */
-    public Integer getLid() {
-        return lid;
-    }
-
-    /**
-     * @deprecated 
-     * @param lid 
-     */
-    public void setLid(Integer lid) {
-        this.lid = lid;
-    }
-
     public String getIsbn() {
         return isbn;
     }
@@ -105,8 +62,8 @@ public class Libro extends Material {
     }
 
     /**
-     * @return boolean <code>true</code> si este libro tiene un CD asociado,
-     * de lo contrario, <code>false</code>.
+     * @return boolean <code>true</code> si este libro tiene un CD asociado, de
+     * lo contrario, <code>false</code>.
      */
     public boolean hasCd() {
         return this.cd != null;
@@ -124,7 +81,7 @@ public class Libro extends Material {
 
     @Override
     public void load() {
-        Libro libro = DaoFactory.getLibroDao().retrieve(this);
+        Libro libro = DaoFactory.getLibroDao().retrieve(this.getId());
 
         this.setTitulo(libro.getTitulo());
         this.setEditorial(libro.getEditorial());
