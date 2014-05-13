@@ -9,16 +9,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Implementa una interfaz de línea de comandos para este programa.
  */
 public class BibliotecaCli {
 
-    private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    private static final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
     private static void agregarCD() {
-        boolean error = false;
+        boolean error;
         Cd cd = new Cd();
 
         do {
@@ -26,9 +28,9 @@ public class BibliotecaCli {
             System.out.print("Título: ");
             try {
                 cd.setTitulo(in.readLine());
-            } catch (IOException err) {
+            } catch (IOException ex) {
                 error = true;
-                System.err.println(err.toString());
+                Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
             }
         } while (error);
 
@@ -37,9 +39,9 @@ public class BibliotecaCli {
             System.out.print("Editorial: ");
             try {
                 cd.setEditorial(in.readLine());
-            } catch (IOException err) {
+            } catch (IOException ex) {
                 error = true;
-                System.err.println(err.toString());
+                Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
             }
         } while (error);
 
@@ -56,9 +58,9 @@ public class BibliotecaCli {
             try {
                 //book.setIsbn(Integer.parseInt(in.readLine()));
                 libro.setIsbn(in.readLine());
-            } catch (Exception err) {
+            } catch (IOException ex) {
                 error = true;
-                System.err.println(err.toString());
+                Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
             }
         } while (error);
 
@@ -67,9 +69,9 @@ public class BibliotecaCli {
             System.out.print("Título: ");
             try {
                 libro.setTitulo(in.readLine());
-            } catch (Exception err) {
+            } catch (IOException ex) {
                 error = true;
-                System.err.println(err.toString());
+                Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
             }
         } while (error);
 
@@ -78,9 +80,9 @@ public class BibliotecaCli {
             System.out.print("Autor: ");
             try {
                 libro.setAutor(in.readLine());
-            } catch (Exception err) {
+            } catch (IOException ex) {
                 error = true;
-                System.err.println(err.toString());
+                Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
             }
         } while (error);
 
@@ -89,9 +91,9 @@ public class BibliotecaCli {
             System.out.print("Editorial: ");
             try {
                 libro.setEditorial(in.readLine());
-            } catch (Exception err) {
+            } catch (IOException ex) {
                 error = true;
-                System.err.println(err.toString());
+                Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
             }
         } while (error);
 
@@ -101,12 +103,12 @@ public class BibliotecaCli {
             try {
                 if ("s".equals(in.readLine().toLowerCase())) {
                     System.out.print("CD ID: ");
-                    
+
                     CdDao dao = DaoFactory.getCdDao();
                     libro.setCd(dao.retrieve(Integer.parseInt(in.readLine())));
                 }
-            } catch (IOException err) {
-                System.err.println(err.toString());
+            } catch (IOException ex) {
+                Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
             }
         } while (error);
 
@@ -134,8 +136,8 @@ public class BibliotecaCli {
 
                 try {
                     opt = Integer.parseInt(in.readLine());
-                } catch (Exception err) {
-                    System.err.println(err.toString());
+                } catch (IOException | NumberFormatException ex) {
+                    Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } while (opt < 0 || opt > 3);
@@ -194,8 +196,8 @@ public class BibliotecaCli {
 
                 try {
                     opt = Integer.parseInt(in.readLine());
-                } catch (Exception err) {
-                    System.err.println(err.toString());
+                } catch (IOException | NumberFormatException ex) {
+                    Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } while (opt < 0 || opt > 3);
@@ -254,8 +256,8 @@ public class BibliotecaCli {
 
                 try {
                     opt = Integer.parseInt(in.readLine());
-                } catch (Exception err) {
-                    System.err.println(err.toString());
+                } catch (IOException | NumberFormatException ex) {
+                    Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } while (opt < 0 || opt > 3);
@@ -302,8 +304,8 @@ public class BibliotecaCli {
 
                 try {
                     opt = Integer.parseInt(in.readLine());
-                } catch (Exception err) {
-                    System.err.println(err.toString());
+                } catch (IOException | NumberFormatException ex) {
+                    Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } while (opt < 0 || opt > 3);
@@ -374,8 +376,8 @@ public class BibliotecaCli {
 
                 try {
                     opt = Integer.parseInt(in.readLine());
-                } catch (Exception err) {
-                    System.err.println(err.toString());
+                } catch (IOException | NumberFormatException ex) {
+                    Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } while (opt < 0 || opt > 3);
@@ -434,8 +436,8 @@ public class BibliotecaCli {
 
                 try {
                     opt = Integer.parseInt(in.readLine());
-                } catch (Exception err) {
-                    System.err.println(err.toString());
+                } catch (IOException | NumberFormatException ex) {
+                    Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } while (opt < 0 || opt > 3);
@@ -494,8 +496,8 @@ public class BibliotecaCli {
 
                 try {
                     opt = Integer.parseInt(in.readLine());
-                } catch (Exception err) {
-                    System.err.println(err.toString());
+                } catch (IOException | NumberFormatException ex) {
+                    Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } while (opt < 0 || opt > 3);
@@ -542,8 +544,8 @@ public class BibliotecaCli {
 
                 try {
                     opt = Integer.parseInt(in.readLine());
-                } catch (Exception err) {
-                    System.err.println(err.toString());
+                } catch (IOException | NumberFormatException ex) {
+                    Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } while (opt < 0 || opt > 3);
@@ -607,8 +609,8 @@ public class BibliotecaCli {
 
                 try {
                     opt = Integer.parseInt(in.readLine());
-                } catch (Exception err) {
-                    System.err.println(err.toString());
+                } catch (IOException | NumberFormatException ex) {
+                    Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } while (opt < 0 || opt > 4);
@@ -676,8 +678,8 @@ public class BibliotecaCli {
 
                 try {
                     opt = Integer.parseInt(in.readLine());
-                } catch (Exception err) {
-                    System.err.println(err.toString());
+                } catch (IOException | NumberFormatException ex) {
+                    Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } while (opt < 0 || opt > 4);
@@ -728,8 +730,8 @@ public class BibliotecaCli {
 
                 try {
                     opt = Integer.parseInt(in.readLine());
-                } catch (Exception err) {
-                    System.err.println(err.toString());
+                } catch (IOException | NumberFormatException ex) {
+                    Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } while (opt < 0 || opt > 3);
@@ -775,8 +777,8 @@ public class BibliotecaCli {
 
                 try {
                     opt = Integer.parseInt(in.readLine());
-                } catch (Exception err) {
-                    System.err.println(err.toString());
+                } catch (IOException | NumberFormatException ex) {
+                    Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } while (opt < 0 || opt > 2);
@@ -831,8 +833,8 @@ public class BibliotecaCli {
 
                 try {
                     opt = Integer.parseInt(in.readLine());
-                } catch (Exception err) {
-                    System.err.println(err.toString());
+                } catch (IOException | NumberFormatException ex) {
+                    Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } while (opt < 0 || opt > 3);
@@ -882,8 +884,8 @@ public class BibliotecaCli {
 
                 try {
                     opt = Integer.parseInt(in.readLine());
-                } catch (Exception err) {
-                    System.err.println(err.toString());
+                } catch (IOException | NumberFormatException ex) {
+                    Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } while (opt < 0 || opt > 2);
@@ -931,8 +933,8 @@ public class BibliotecaCli {
 
                 try {
                     opt = Integer.parseInt(in.readLine());
-                } catch (Exception err) {
-                    System.err.println(err.toString());
+                } catch (IOException | NumberFormatException ex) {
+                    Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } while (opt < 0 || opt > 2);
@@ -975,8 +977,8 @@ public class BibliotecaCli {
 
                 try {
                     opt = Integer.parseInt(in.readLine());
-                } catch (Exception err) {
-                    System.err.println(err.toString());
+                } catch (IOException | NumberFormatException ex) {
+                    Logger.getLogger(BibliotecaCli.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } while (opt < 0 || opt > 3);

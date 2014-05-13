@@ -33,20 +33,11 @@ public class RevistaDaoSqlite implements RevistaDao {
             String insertCmd = String.format("INSERT INTO materiales (titulo, editorial) VALUES ('%s', '%s')", revista.getTitulo(), revista.getEditorial());
             statement.executeUpdate(insertCmd);
 
-            /*// Obtiene el identificador del material insertado.
-            String getLastKeyQuery = "SELECT max(mid) AS mid FROM materiales";
-            ResultSet rs = statement.executeQuery(getLastKeyQuery);
-            while (rs.next()) {
-                magazine.setMid(Integer.parseInt(rs.getString("mid")));
-            }*/
-
             // Se inserta la revista.
-            //String cid = magazine.hasCd() ? magazine.getCd().getCid().toString() : "NULL";
             String cid = revista.hasCd() ? revista.getCd().getId().toString() : "NULL";
-            //insertCmd = String.format("INSERT INTO revistas (mid, periodicidad, cid) VALUES (%d, '%s', %s)", magazine.getMid(), magazine.getPeriodicidad(), cid);
             insertCmd = String.format("INSERT INTO revistas (mid, periodicidad, cid) VALUES ((SELECT max(mid) FROM materiales), '%s', %s)", revista.getPeriodicidad(), cid);
             statement.executeUpdate(insertCmd);
-            
+
             // Se obtiene el identificador de la revista.
             String getLastKeyQuery = "SELECT max(rid) AS rid FROM revistas";
             ResultSet rs = statement.executeQuery(getLastKeyQuery);
@@ -68,54 +59,42 @@ public class RevistaDaoSqlite implements RevistaDao {
                     }
                 }
             }
-        } catch (SQLException err) {
-            System.err.println(err.toString());
+        } catch (SQLException ex) {
+            Logger.getLogger(RevistaDaoSqlite.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
-    public Revista retrieve(int rid) {
+    public Revista retrieve(int id) {
         Revista revista = new Revista();
-        //magazine.setRid(rid);
-        revista.setId(rid);
+        revista.setId(id);
 
         try {
             Statement statement = this.connection.createStatement();
 
             // Se cargan los datos de la revista.
-            String query = String.format("SELECT mid, titulo, editorial, periodicidad FROM revistas JOIN materiales USING (mid) WHERE rid = %d", rid);
+            String query = String.format("SELECT titulo, editorial, periodicidad FROM revistas JOIN materiales USING (mid) WHERE rid = %d", id);
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
-                //magazine.setMid(rs.getInt("mid"));
                 revista.setTitulo(rs.getString("titulo"));
                 revista.setEditorial(rs.getString("editorial"));
                 revista.setPeriodicidad(rs.getString("periodicidad"));
             }
-            
+
             // Se cargan los ejemplares de la revista, si tiene.
-            query = String.format("SELECT numero FROM revistas JOIN ejemplares USING (mid) WHERE rid = %d", rid);
+            query = String.format("SELECT numero FROM revistas JOIN ejemplares USING (mid) WHERE rid = %d", id);
             rs = statement.executeQuery(query);
             while (rs.next()) {
                 revista.addCopia(new Copia(rs.getInt("numero")));
             }
-            
+
             // Se carga el CD asociado a la revista, si existe.
-            // @todo Usar método "retrieve" del CD para cargar datos y ejemplares.
-            // @todo Limpiar SELECT.
-            query = String.format("SELECT cid, mid, titulo, editorial FROM materiales JOIN (SELECT cds.* FROM revistas JOIN cds USING (cid) WHERE rid = %d) USING (mid)", rid);
+            query = String.format("SELECT cid FROM materiales JOIN (SELECT cds.* FROM revistas JOIN cds USING (cid) WHERE rid = %d) USING (mid)", id);
             rs = statement.executeQuery(query);
             while (rs.next()) {
-                /*Cd cd = new Cd();
-                cd.setCid(rs.getInt("cid"));
-                cd.setMid(rs.getInt("mid"));
-                cd.setTitulo(rs.getString("titulo"));
-                cd.setEditorial(rs.getString("editorial"));
-                magazine.setCd(cd);*/
                 revista.setCd(DaoFactory.getCdDao().retrieve(rs.getInt("cid")));
             }
-        } catch (SQLException err) {
-            System.err.println(err.toString());
-        } catch (Revista.PeriodicidadInvalidaException ex) {
+        } catch (SQLException | Revista.PeriodicidadInvalidaException ex) {
             Logger.getLogger(RevistaDaoSqlite.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -142,30 +121,29 @@ public class RevistaDaoSqlite implements RevistaDao {
             statement.executeUpdate(query);
 
             // Luego se elimina la revista.
-            //query = String.format("DELETE FROM materiales WHERE mid = %d", magazine.getMid());
             query = String.format("DELETE FROM materiales WHERE mid = (SELECT mid FROM revistas WHERE rid = %d)", revista.getId());
             statement.executeUpdate(query);
-        } catch (SQLException err) {
-            System.err.println(err.toString());
+        } catch (SQLException ex) {
+            Logger.getLogger(RevistaDaoSqlite.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
     public List<Revista> retrieveAll() {
-        List<Revista> books = new ArrayList<>();
+        List<Revista> revistas = new ArrayList<>();
 
         try {
             String query = "SELECT rid FROM revistas";
             Statement statement = this.connection.createStatement();
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
-                books.add(retrieve(rs.getInt("rid")));
+                revistas.add(retrieve(rs.getInt("rid")));
             }
-        } catch (SQLException err) {
-            System.err.println(err.toString());
+        } catch (SQLException ex) {
+            Logger.getLogger(RevistaDaoSqlite.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return books;
+        return revistas;
     }
 
 }

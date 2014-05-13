@@ -75,6 +75,7 @@ public interface Dao<T> {
      * Carga los datos de un material cuyo identificador es conocido.
      * @param t El material que se cargará
      * @return El material cargado
+     * @deprecated 
      */
     public T retrieve(T t);
 

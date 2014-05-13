@@ -3,7 +3,11 @@ package biblioteca.dao;
 import biblioteca.dao.sqlite.CdDaoSqlite;
 import biblioteca.dao.sqlite.LibroDaoSqlite;
 import biblioteca.dao.sqlite.RevistaDaoSqlite;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Fábrica para generar objetos de acceso a datos.
@@ -17,17 +21,11 @@ public class DaoFactory {
 
         try {
             Class.forName("org.sqlite.JDBC");
-        } catch (ClassNotFoundException err) {
-            System.err.println(err.toString());
+            connection = DriverManager.getConnection("jdbc:sqlite:biblioteca.db");
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(RevistaDaoSqlite.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        try {
-            // create a database connection
-            connection = DriverManager.getConnection("jdbc:sqlite:biblioteca.db");
-        } catch (SQLException err) {
-            System.err.println(err.toString());
-        }
-        
         return connection;
     }
 

@@ -7,20 +7,25 @@ import java.util.List;
  * Representa una revista de la biblioteca.
  */
 public class Revista extends Material {
-    
+
     /**
      * La frecuencia de publicación de esta revista.
      * <p>
      * Permite controlar la creación de revistas con una frecuencia válida.
-     * 
+     *
      * @see biblioteca.domain.Revista.PeriodicidadInvalidaException
      */
-    public enum Periodicidades { Mensual, Quincenal, Semanal };
+    public enum Periodicidades {
+
+        Mensual, Quincenal, Semanal
+    };
+
     public enum Periodicidad {
+
         MENSUAL,
         QUINCENAL,
         SEMANAL;
-        
+
         /**
          * @return Una representación estandarizada de esta periodicidad.
          */
@@ -47,7 +52,8 @@ public class Revista extends Material {
      * <p>
      * Se usa un tipo de dato <code>Integer</code> porque puede no estar
      * definido, es decir, ser <code>null</code>.
-     * @deprecated 
+     *
+     * @deprecated
      */
     private Integer rid;
     private Periodicidad periodicidad;
@@ -87,16 +93,14 @@ public class Revista extends Material {
     }
 
     /**
-     * @deprecated 
-     * @return 
+     * @deprecated @return
      */
     public Integer getRid() {
         return rid;
     }
 
     /**
-     * @deprecated 
-     * @param rid 
+     * @deprecated @param rid
      */
     public void setRid(Integer rid) {
         this.rid = rid;
@@ -116,13 +120,9 @@ public class Revista extends Material {
      * @throws biblioteca.domain.Revista.PeriodicidadInvalidaException
      */
     public final void setPeriodicidad(String periodicidad) throws PeriodicidadInvalidaException {
-        try {
-            this.periodicidad = Periodicidad.valueOf(periodicidad.toUpperCase());
-        } catch (Exception err) {
-            throw new PeriodicidadInvalidaException(err.toString());
-        }
+        this.periodicidad = Periodicidad.valueOf(periodicidad.toUpperCase());
     }
-    
+
     public void setPeriodicidad(Periodicidad periodicidad) {
         this.periodicidad = periodicidad;
     }
@@ -158,6 +158,7 @@ public class Revista extends Material {
      * Exception para capturar errores en la periodicidad de una revista.
      */
     public class PeriodicidadInvalidaException extends Exception {
+
         public PeriodicidadInvalidaException(String message) {
             super(message);
         }

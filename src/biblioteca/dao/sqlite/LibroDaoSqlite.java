@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Implementa el acceso a libros almacenados en una base de datos Sqlite.
@@ -37,8 +39,8 @@ public class LibroDaoSqlite implements LibroDao {
                 // utilizando el identificador obtenido.
                 libro = this.retrieve(Integer.parseInt(rs.getString("lid")));
             }
-        } catch (SQLException err) {
-            System.err.println(err.toString());
+        } catch (SQLException ex) {
+            Logger.getLogger(RevistaDaoSqlite.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return libro;
@@ -49,24 +51,15 @@ public class LibroDaoSqlite implements LibroDao {
         try {
             Statement statement = this.connection.createStatement();
 
-            // Inserta el material.
+            // Se inserta el material.
             String insertCmd = String.format("INSERT INTO materiales (titulo, editorial) VALUES ('%s', '%s')", libro.getTitulo(), libro.getEditorial());
             statement.executeUpdate(insertCmd);
 
-            /*// Obtiene el identificador del material insertado.
-            String getLastKeyQuery = "SELECT max(mid) AS mid FROM materiales";
-            ResultSet rs = statement.executeQuery(getLastKeyQuery);
-            while (rs.next()) {
-                b.setMid(rs.getInt("mid"));
-            }*/
-
-            // Inserta el libro.
-            //String cid = b.hasCd() ? b.getCd().getCid().toString() : "NULL";
+            // Se inserta el libro.
             String cid = libro.hasCd() ? libro.getCd().getId().toString() : "NULL";
-            //insertCmd = String.format("INSERT INTO libros (mid, cid, isbn, autor) VALUES (%d, %s, '%s', '%s')", b.getMid(), cid, b.getIsbn(), b.getAutor());
             insertCmd = String.format("INSERT INTO libros (mid, cid, isbn, autor) VALUES ((SELECT max(mid) AS mid FROM materiales), %s, '%s', '%s')", cid, libro.getIsbn(), libro.getAutor());
             statement.executeUpdate(insertCmd);
-            
+
             // Se obtiene el identificador del libro insertado.
             String getLastKeyQuery = "SELECT max(lid) AS lid FROM libros";
             ResultSet rs = statement.executeQuery(getLastKeyQuery);
@@ -74,10 +67,9 @@ public class LibroDaoSqlite implements LibroDao {
                 libro.setId(rs.getInt("lid"));
             }
 
-            // Guarda las copias del libro, si tiene.
+            // Se guardan las copias del libro, si tiene.
             if (libro.hasCopias()) {
                 for (Copia ejemplar : libro.getCopias()) {
-                    //insertCmd = String.format("INSERT INTO ejemplares (mid, numero) VALUES (%d, %d)", b.getMid(), ejemplar.getNumero());
                     insertCmd = String.format("INSERT INTO ejemplares (mid, numero) VALUES ((SELECT mid FROM libros WHERE lid = %d), %d)", libro.getId(), ejemplar.getNumero());
                     statement.executeUpdate(insertCmd);
 
@@ -89,66 +81,32 @@ public class LibroDaoSqlite implements LibroDao {
                     }
                 }
             }
-        } catch (SQLException err) {
-            System.err.println(err.toString());
+        } catch (SQLException ex) {
+            Logger.getLogger(RevistaDaoSqlite.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     /**
-     * @todo Utilizar método retrieve(int lid)
-     * @param libro
+     * @param libro el libro con su atributo identificador definido.
      * @return
      */
     @Override
     public Libro retrieve(Libro libro) {
-        try {
-            Statement statement = this.connection.createStatement();
-
-            // Primero se cargan los datos del libro.
-            String query = String.format("SELECT titulo, autor, editorial FROM libros JOIN materiales USING (mid) WHERE isbn = '%s'", libro.getIsbn());
-            ResultSet rs = statement.executeQuery(query);
-            while (rs.next()) {
-                String titulo = rs.getString("titulo");
-                String autor = rs.getString("autor");
-                String editorial = rs.getString("editorial");
-
-                libro.setTitulo(titulo);
-                libro.setAutor(autor);
-                libro.setEditorial(editorial);
-            }
-
-            // Una vez cargado el libro,
-            // se cargan sus ejemplares.
-            libro.setCopias(new ArrayList<Copia>());
-            query = String.format("SELECT numero FROM libros JOIN ejemplares USING (mid) WHERE isbn = '%s'", libro.getIsbn());
-            rs = statement.executeQuery(query);
-            while (rs.next()) {
-                int numero = Integer.parseInt(rs.getString("numero"));
-                libro.addCopia(new Copia(numero));
-            }
-
-        } catch (SQLException err) {
-            System.err.println(err.toString());
-        }
-
-        return libro;
+        return this.retrieve(libro.getId());
     }
 
     @Override
-    public Libro retrieve(int lid) {
+    public Libro retrieve(int id) {
         Libro libro = new Libro();
-        //Cd cd = new Cd();
-        //book.setLid(lid);
-        libro.setId(lid);
+        libro.setId(id);
 
         try {
             Statement statement = this.connection.createStatement();
 
             // Primero se cargan los datos del libro.
-            String query = String.format("SELECT mid, titulo, autor, editorial, isbn FROM libros JOIN materiales USING (mid) WHERE lid = %d", lid);
+            String query = String.format("SELECT titulo, autor, editorial, isbn FROM libros JOIN materiales USING (mid) WHERE lid = %d", id);
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
-                //book.setMid(Integer.parseInt(rs.getString("mid")));
                 libro.setTitulo(rs.getString("titulo"));
                 libro.setAutor(rs.getString("autor"));
                 libro.setEditorial(rs.getString("editorial"));
@@ -156,36 +114,22 @@ public class LibroDaoSqlite implements LibroDao {
             }
 
             // Se cargan las copias del libro.
-            //book.setCopias(new ArrayList<Copia>());
-            query = String.format("SELECT numero FROM libros JOIN ejemplares USING (mid) WHERE lid = %d", lid);
+            query = String.format("SELECT numero FROM libros JOIN ejemplares USING (mid) WHERE lid = %d", id);
             rs = statement.executeQuery(query);
             while (rs.next()) {
-                int numero = Integer.parseInt(rs.getString("numero"));
-                libro.addCopia(new Copia(numero));
+                libro.addCopia(new Copia(rs.getInt("numero")));
             }
 
             // Se carga el CD asociado al libro, si existe.
-            // @todo Usar método "retrieve" del CD para cargar datos y ejemplares.
-            // @todo Limpiar SELECT.
-            query = String.format("SELECT cid, mid, titulo, editorial FROM materiales JOIN (SELECT cds.* FROM libros JOIN cds USING (cid) WHERE lid = %d) USING (mid)", lid);
+            // @todo Revisar consulta SQL; ¿es optimizable?
+            query = String.format("SELECT cid FROM materiales JOIN (SELECT cds.* FROM libros JOIN cds USING (cid) WHERE lid = %d) USING (mid)", id);
             rs = statement.executeQuery(query);
             while (rs.next()) {
-                //book.setCd(new Cd());
-                /*cd.setCid(rs.getInt("cid"));
-                cd.setMid(rs.getInt("mid"));
-                cd.setTitulo(rs.getString("titulo"));
-                cd.setEditorial(rs.getString("editorial"));*/
-                /*book.getCd().setCid(rs.getInt("cid"));
-                book.getCd().setMid(rs.getInt("mid"));
-                book.getCd().setTitulo(rs.getString("titulo"));
-                book.getCd().setEditorial(rs.getString("editorial"));*/
-
-                //book.setCd(cd);
                 libro.setCd(DaoFactory.getCdDao().retrieve(rs.getInt("cid")));
             }
 
-        } catch (SQLException err) {
-            System.err.println(err.toString());
+        } catch (SQLException ex) {
+            Logger.getLogger(RevistaDaoSqlite.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return libro;
@@ -206,11 +150,10 @@ public class LibroDaoSqlite implements LibroDao {
             statement.executeUpdate(query);
 
             // Luego se elimina el libro.
-            //query = String.format("DELETE FROM materiales WHERE mid = %d", book.getMid());
             query = String.format("DELETE FROM materiales WHERE mid = (SELECT mid FROM libros WHERE lid = %d)", libro.getId());
             statement.executeUpdate(query);
-        } catch (SQLException err) {
-            System.err.println(err.toString());
+        } catch (SQLException ex) {
+            Logger.getLogger(RevistaDaoSqlite.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -223,12 +166,10 @@ public class LibroDaoSqlite implements LibroDao {
             Statement statement = this.connection.createStatement();
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
-                //Libro book = getLibroByIsbn(rs.getString("isbn"));
-                //Libro libro = this.retrieve(Integer.parseInt(rs.getString("lid")));
                 books.add(this.retrieve(rs.getInt("lid")));
             }
-        } catch (SQLException err) {
-            System.err.println(err.toString());
+        } catch (SQLException ex) {
+            Logger.getLogger(RevistaDaoSqlite.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return books;
