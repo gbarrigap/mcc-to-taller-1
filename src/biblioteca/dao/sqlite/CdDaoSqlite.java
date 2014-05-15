@@ -46,15 +46,8 @@ public class CdDaoSqlite implements CdDao {
             // Se insertan las copias del CD.
             if (cd.hasCopias()) {
                 for (Copia copia : cd.getCopias()) {
-                    insertCmd = String.format("INSERT INTO ejemplares (mid, numero) VALUES ((SELECT mid FROM cds WHERE cid = %d), %d)", cd.getId(), copia.getNumero());
+                    insertCmd = String.format("INSERT INTO copias (mid, numero) VALUES ((SELECT mid FROM cds WHERE cid = %d), %d)", cd.getId(), copia.getNumero());
                     statement.executeUpdate(insertCmd);
-
-                    // Se obtiene el identificador de la copia insertada.
-                    getLastKeyQuery = "SELECT max(eid) AS eid FROM ejemplares";
-                    rs = statement.executeQuery(getLastKeyQuery);
-                    while (rs.next()) {
-                        copia.setEid(rs.getInt("eid"));
-                    }
                 }
             }
         } catch (SQLException ex) {
@@ -79,7 +72,7 @@ public class CdDaoSqlite implements CdDao {
             }
 
             // Se cargan las copias del CD.
-            query = String.format("SELECT numero FROM cds JOIN ejemplares USING (mid) WHERE cid = %d", id);
+            query = String.format("SELECT numero FROM cds JOIN copias USING (mid) WHERE cid = %d", id);
             rs = statement.executeQuery(query);
             while (rs.next()) {
                 cd.addCopia(new Copia(rs.getInt("numero")));

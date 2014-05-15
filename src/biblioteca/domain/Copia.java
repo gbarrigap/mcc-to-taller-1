@@ -2,7 +2,6 @@ package biblioteca.domain;
 
 public class Copia {
 
-    private Integer eid;
     private int numero;
 
     public Copia(int numero) {
@@ -10,14 +9,6 @@ public class Copia {
     }
 
     public Copia() {
-    }
-
-    public Integer getEid() {
-        return eid;
-    }
-
-    public void setEid(Integer eid) {
-        this.eid = eid;
     }
 
     public int getNumero() {

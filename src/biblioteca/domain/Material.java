@@ -85,6 +85,15 @@ public abstract class Material {
             this.copias.add(copia);
         }
     }
+    
+    /**
+     * Agrega una copia a este material.
+     * 
+     * @param numero El número de la copia que se agregará.
+     */
+    public void addCopia(int numero) {
+        this.addCopia(new Copia(numero));
+    }
 
     /**
      * Agrega una lista de copias a este material.
@@ -106,7 +115,7 @@ public abstract class Material {
         throw new UnsupportedOperationException("Not implemented yet!");
     }
 
-    public void getCopia(int eid) {
+    public void getCopia(int numero) {
         throw new UnsupportedOperationException("Not implemented yet!");
     }
 

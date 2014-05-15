@@ -49,15 +49,8 @@ public class RevistaDaoSqlite implements RevistaDao {
             // Si esta revista tiene copias, se guardan.
             if (revista.hasCopias()) {
                 for (Copia copia : revista.getCopias()) {
-                    insertCmd = String.format("INSERT INTO ejemplares (mid, numero) VALUES ((SELECT mid FROM revistas WHERE rid = %d), %d)", revista.getId(), copia.getNumero());
+                    insertCmd = String.format("INSERT INTO copias (mid, numero) VALUES ((SELECT mid FROM revistas WHERE rid = %d), %d)", revista.getId(), copia.getNumero());
                     statement.executeUpdate(insertCmd);
-
-                    // Se obtiene el identificador de la copia almacenada.
-                    getLastKeyQuery = "SELECT max(eid) AS eid FROM ejemplares";
-                    rs = statement.executeQuery(getLastKeyQuery);
-                    while (rs.next()) {
-                        copia.setEid(rs.getInt("eid"));
-                    }
                 }
             }
         } catch (SQLException ex) {
@@ -82,8 +75,8 @@ public class RevistaDaoSqlite implements RevistaDao {
                 revista.setPeriodicidad(rs.getString("periodicidad"));
             }
 
-            // Se cargan los ejemplares de la revista, si tiene.
-            query = String.format("SELECT numero FROM revistas JOIN ejemplares USING (mid) WHERE rid = %d", id);
+            // Se cargan las copias de la revista, si tiene.
+            query = String.format("SELECT numero FROM revistas JOIN copias USING (mid) WHERE rid = %d", id);
             rs = statement.executeQuery(query);
             while (rs.next()) {
                 revista.addCopia(new Copia(rs.getInt("numero")));

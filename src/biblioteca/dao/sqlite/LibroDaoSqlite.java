@@ -70,15 +70,8 @@ public class LibroDaoSqlite implements LibroDao {
             // Se guardan las copias del libro, si tiene.
             if (libro.hasCopias()) {
                 for (Copia ejemplar : libro.getCopias()) {
-                    insertCmd = String.format("INSERT INTO ejemplares (mid, numero) VALUES ((SELECT mid FROM libros WHERE lid = %d), %d)", libro.getId(), ejemplar.getNumero());
+                    insertCmd = String.format("INSERT INTO copias (mid, numero) VALUES ((SELECT mid FROM libros WHERE lid = %d), %d)", libro.getId(), ejemplar.getNumero());
                     statement.executeUpdate(insertCmd);
-
-                    // Obtiene el identificador de la copia almacenada.
-                    getLastKeyQuery = "SELECT max(eid) AS eid FROM ejemplares";
-                    rs = statement.executeQuery(getLastKeyQuery);
-                    while (rs.next()) {
-                        ejemplar.setEid(rs.getInt("eid"));
-                    }
                 }
             }
         } catch (SQLException ex) {
@@ -105,7 +98,7 @@ public class LibroDaoSqlite implements LibroDao {
             }
 
             // Se cargan las copias del libro.
-            query = String.format("SELECT numero FROM libros JOIN ejemplares USING (mid) WHERE lid = %d", id);
+            query = String.format("SELECT numero FROM libros JOIN copias USING (mid) WHERE lid = %d", id);
             rs = statement.executeQuery(query);
             while (rs.next()) {
                 libro.addCopia(new Copia(rs.getInt("numero")));

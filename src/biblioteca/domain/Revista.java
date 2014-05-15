@@ -53,16 +53,18 @@ public class Revista extends Material {
     }
 
     /**
-     * @param periodicidad La frecuencia de publicación de esta revista. La
-     * periodicidad puede ser mensual, quincenal, semanal, etc.
+     * @param periodicidad La frecuencia de publicación de esta revista.
+     */
+    public void setPeriodicidad(Periodicidad periodicidad) {
+        this.periodicidad = periodicidad;
+    }
+
+    /**
+     * @param periodicidad La frecuencia de publicación de esta revista.
      * @throws biblioteca.domain.Revista.PeriodicidadInvalidaException
      */
     public final void setPeriodicidad(String periodicidad) throws PeriodicidadInvalidaException {
         this.periodicidad = Periodicidad.valueOf(periodicidad.toUpperCase());
-    }
-
-    public void setPeriodicidad(Periodicidad periodicidad) {
-        this.periodicidad = periodicidad;
     }
 
     public Cd getCd() {
