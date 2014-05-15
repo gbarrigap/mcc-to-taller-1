@@ -16,9 +16,10 @@ public class Revista extends Material {
      */
     public enum Periodicidad {
 
-        MENSUAL,
+        SEMANAL,
         QUINCENAL,
-        SEMANAL;
+        MENSUAL,
+        TRIMESTRAL;
 
         /**
          * @return Una representación estandarizada de esta periodicidad.
@@ -35,6 +36,9 @@ public class Revista extends Material {
                     break;
                 case SEMANAL:
                     value = "Semanal";
+                    break;
+                case TRIMESTRAL:
+                    value = "Trimestral";
                     break;
             }
             return value;
