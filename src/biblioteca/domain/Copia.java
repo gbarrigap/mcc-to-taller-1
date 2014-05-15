@@ -4,11 +4,11 @@ public class Copia {
 
     private int numero;
 
-    public Copia(int numero) {
-        this.numero = numero;
+    public Copia() {
     }
 
-    public Copia() {
+    public Copia(int numero) {
+        this.numero = numero;
     }
 
     public int getNumero() {
