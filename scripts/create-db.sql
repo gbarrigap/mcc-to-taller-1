@@ -10,32 +10,32 @@ DROP TABLE IF EXISTS usuarios;
 CREATE TABLE materiales (
     mid             INTEGER PRIMARY KEY AUTOINCREMENT,
     titulo          TEXT NOT NULL,
-    editorial       TEXT
+    editorial       TEXT NOT NULL
 );
 
 CREATE TABLE cds (
     cid             INTEGER PRIMARY KEY AUTOINCREMENT,
-    mid             INTEGER REFERENCES materiales(mid) ON DELETE CASCADE
+    mid             INTEGER NOT NULL REFERENCES materiales(mid) ON DELETE CASCADE
 );
 
 CREATE TABLE libros (
     lid             INTEGER PRIMARY KEY AUTOINCREMENT,
-    mid             INTEGER REFERENCES materiales(mid) ON DELETE CASCADE,
-    cid             INTEGER REFERENCES cds(cid) ON DELETE SET NULL,
-    isbn            TEXT UNIQUE,
+    mid             INTEGER NOT NULL REFERENCES materiales(mid) ON DELETE CASCADE,
+    cid             INTEGER NOT NULL REFERENCES cds(cid)        ON DELETE SET NULL,
+    isbn            TEXT NOT NULL UNIQUE,
     autor           TEXT NOT NULL
 );
 
 CREATE TABLE revistas (
     rid             INTEGER PRIMARY KEY AUTOINCREMENT,
-    mid             INTEGER REFERENCES materiales(mid) ON DELETE CASCADE,
-    cid             INTEGER REFERENCES cds(cid) ON DELETE SET NULL,
+    mid             INTEGER NOT NULL REFERENCES materiales(mid) ON DELETE CASCADE,
+    cid             INTEGER NOT NULL REFERENCES cds(cid)        ON DELETE SET NULL,
     periodicidad    TEXT NOT NULL CHECK (periodicidad IN ('Quincenal', 'Mensual', 'Trimestral', 'Semanal'))
     
 );
 
 CREATE TABLE copias (
-    mid             INTEGER REFERENCES materiales(mid) ON DELETE CASCADE,
+    mid             INTEGER NOT NULL REFERENCES materiales(mid) ON DELETE CASCADE,
     numero          INTEGER NOT NULL,
     
     PRIMARY KEY (mid, numero)
@@ -49,14 +49,15 @@ CREATE TABLE usuarios (
 
 CREATE TABLE prestamos (
     pid             INTEGER PRIMARY KEY AUTOINCREMENT,
-    uid             INTEGER REFERENCES usuarios(uid) ON DELETE CASCADE,
+    uid             INTEGER NOT NULL REFERENCES usuarios(uid) ON DELETE CASCADE,
     vigente         INTEGER NOT NULL CHECK (vigente IN (0, 1)) -- 0 = FALSE; 1 = TRUE.
 );
 
 CREATE TABLE detalles_prestamos (
-    pid             INTEGER REFERENCES prestamos(pid) ON DELETE CASCADE,
-    mid             INTEGER REFERENCES copias(mid) ON DELETE CASCADE,
-    numero          INTEGER REFERENCES copias(numero) ON DELETE CASCADE,
+    pid             INTEGER NOT NULL REFERENCES prestamos(pid) ON DELETE CASCADE,
+    mid             INTEGER NOT NULL,
+    numero          INTEGER NOT NULL,
 
-    PRIMARY KEY (pid, mid, numero)
+    PRIMARY KEY (pid, mid, numero),
+    FOREIGN KEY (mid, numero) REFERENCES copias(mid, numero) ON DELETE CASCADE
 );
