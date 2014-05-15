@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS materiales_prestamos;
+DROP TABLE IF EXISTS detalles_prestamos;
 DROP TABLE IF EXISTS prestamos;
-DROP TABLE IF EXISTS ejemplares;
+DROP TABLE IF EXISTS copias;
 DROP TABLE IF EXISTS libros;
 DROP TABLE IF EXISTS revistas;
 DROP TABLE IF EXISTS cds;
@@ -34,12 +34,11 @@ CREATE TABLE revistas (
     
 );
 
-CREATE TABLE ejemplares (
-    eid             INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE copias (
     mid             INTEGER REFERENCES materiales(mid) ON DELETE CASCADE,
     numero          INTEGER NOT NULL,
     
-    UNIQUE (mid, numero)
+    PRIMARY KEY (mid, numero)
 );
 
 CREATE TABLE usuarios (
@@ -54,9 +53,10 @@ CREATE TABLE prestamos (
     vigente         INTEGER NOT NULL CHECK (vigente IN (0, 1)) -- 0 = FALSE; 1 = TRUE.
 );
 
-CREATE TABLE materiales_prestamos (
+CREATE TABLE detalles_prestamos (
     pid             INTEGER REFERENCES prestamos(pid) ON DELETE CASCADE,
-    eid             INTEGER REFERENCES ejemplares(eid) ON DELETE CASCADE,
+    mid             INTEGER REFERENCES copias(mid) ON DELETE CASCADE,
+    numero          INTEGER REFERENCES copias(numero) ON DELETE CASCADE,
 
-    PRIMARY KEY (pid, eid)
+    PRIMARY KEY (pid, mid, numero)
 );
